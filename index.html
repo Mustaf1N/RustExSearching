@@ -3,687 +3,1155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RustEx Searching</title>
+<title>RustEx Searching - Professional Edition</title>
 <link rel="icon" href="https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg" type="image/svg+xml">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    :root{--rust-orange:#cd412b;--rust-red:#8b0000;--rust-dark:#131313;--rust-panel:rgba(30,30,30,0.95);--rust-metal:#2d2d2d;--rust-text:#cecece;--rust-green:#568a39}
-    body{font-family:'Roboto',sans-serif;background:var(--rust-dark);color:var(--rust-text);min-height:100vh;background-image:url('https://files.facepunch.com/paddy/20230801/header_bg.jpg');background-size:cover;background-attachment:fixed;background-position:center}
-    body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,15,15,0.93);z-index:-1}
-    .rust-font{font-family:'Russo One',sans-serif;text-transform:uppercase;letter-spacing:1px}
-    .text-rust-orange{color:var(--rust-orange)}
-    .rust-btn{background:#567236;border:1px solid #7da558;color:#fff;padding:10px 24px;font-family:'Russo One';text-transform:uppercase;font-size:14px;cursor:pointer;transition:0.1s;text-shadow:1px 1px 0 rgba(0,0,0,0.5);display:inline-flex;align-items:center;justify-content:center}
-    .rust-btn:hover{background:#658540;transform:translateY(-1px)}
-    .rust-btn:active{transform:translateY(1px)}
-    .rust-btn.red{background:var(--rust-orange);border-color:#ff6b4a}
-    .rust-btn.red:hover{background:#d64d36}
-    .rust-btn:disabled{opacity:0.5;cursor:not-allowed;filter:grayscale(1)}
-    .rust-input{background:rgba(0,0,0,0.3);border:1px solid #444;padding:12px;color:#ddd;width:100%;font-family:'Roboto';transition:0.2s}
-    .rust-input:focus{background:rgba(0,0,0,0.5);border-color:var(--rust-orange);outline:none}
-    .rust-input:disabled{opacity:0.6;cursor:not-allowed;border-color:#333}
-    .rust-panel{background:var(--rust-panel);border:1px solid #3d3d3d;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
-    .nav-item{padding:0 20px;height:100%;display:flex;align-items:center;cursor:pointer;font-family:'Russo One';color:#888;text-transform:uppercase;font-size:14px;transition:0.2s;border-bottom:2px solid transparent}
-    .nav-item:hover{color:#ccc;background:rgba(255,255,255,0.05)}
-    .nav-item.active{color:var(--rust-orange);border-bottom-color:var(--rust-orange);background:linear-gradient(180deg,transparent,rgba(205,65,43,0.1))}
-    .listing-card{transition:transform 0.2s, box-shadow 0.2s; border:1px solid #333}
-    .listing-card:hover{transform:translateY(-3px);border-color:var(--rust-orange);box-shadow:0 10px 20px rgba(0,0,0,0.4)}
-    .category-badge{font-family:'Russo One';font-size:10px;padding:3px 8px;text-transform:uppercase;letter-spacing:0.5px}
-    .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s}
-    .modal.show{display:flex;opacity:1}
-    .chat-msg{padding:8px 12px;border-radius:4px;max-width:80%;margin-bottom:6px;font-size:14px;line-height:1.4}
-    .chat-msg.me{background:var(--rust-orange);color:white;align-self:flex-end;margin-left:auto}
-    .chat-msg.them{background:#333;color:#ddd;align-self:flex-start}
-    ::-webkit-scrollbar{width:6px}
-    ::-webkit-scrollbar-track{background:#111}
-    ::-webkit-scrollbar-thumb{background:#444;border-radius:3px}
-    ::-webkit-scrollbar-thumb:hover{background:var(--rust-orange)}
-    .toast{position:fixed;bottom:20px;right:20px;padding:15px 25px;background:#333;border-left:4px solid var(--rust-orange);color:white;transform:translateX(200%);transition:0.3s;z-index:2000;font-weight:bold}
-    .toast.show{transform:translateX(0)}
-    .toast.error{border-color:#ff4444;background:#2a1111}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--rust-orange:#cd412b;--rust-red:#8b0000;--rust-dark:#1a1a1a;--rust-darker:#0d0d0d;--rust-metal:#2d2d2d;--rust-light:#e8e8e8;--rust-gold:#d4a853}
+body{font-family:'Roboto',sans-serif;background:var(--rust-darker);color:var(--rust-light);min-height:100vh;background-image:url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=80');background-size:cover;background-attachment:fixed;background-position:center}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(13,13,13,0.92);z-index:-1}
+.rust-font{font-family:'Russo One',sans-serif;text-transform:uppercase;letter-spacing:2px}
+.rust-btn{background:linear-gradient(180deg,#cd412b 0%,#8b0000 100%);border:2px solid #ff6b4a;padding:12px 24px;color:white;font-weight:bold;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden}
+.rust-btn:hover{transform:translateY(-2px);box-shadow:0 5px 20px rgba(205,65,43,0.5);border-color:#ffaa80}
+.rust-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.rust-input{background:rgba(30,30,30,0.9);border:2px solid #444;padding:12px 16px;color:white;width:100%;transition:all 0.3s}
+.rust-input:focus{outline:none;border-color:var(--rust-orange);box-shadow:0 0 10px rgba(205,65,43,0.3)}
+.rust-card{background:linear-gradient(145deg,rgba(45,45,45,0.95),rgba(26,26,26,0.95));border:1px solid #444;position:relative;overflow:hidden}
+.rust-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rust-orange),var(--rust-gold),var(--rust-orange))}
+.metal-texture{background:repeating-linear-gradient(90deg,transparent,transparent 2px,rgba(255,255,255,0.03) 2px,rgba(255,255,255,0.03) 4px)}
+.nav-link{padding:12px 20px;cursor:pointer;transition:all 0.3s;border-bottom:3px solid transparent;text-transform:uppercase;letter-spacing:1px;font-size:14px}
+.nav-link:hover,.nav-link.active{background:rgba(205,65,43,0.2);border-bottom-color:var(--rust-orange);color:var(--rust-orange)}
+.listing-card{transition:all 0.3s}
+.listing-card:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+.category-badge{font-size:11px;padding:4px 10px;text-transform:uppercase;letter-spacing:1px}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+.modal.show{display:flex}
+.chat-message{max-width:70%;padding:10px 14px;border-radius:12px;margin:5px 0;word-wrap:break-word}
+.chat-message.sent{background:var(--rust-orange);margin-left:auto;border-bottom-right-radius:4px}
+.chat-message.received{background:var(--rust-metal);margin-right:auto;border-bottom-left-radius:4px}
+.avatar{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--rust-orange)}
+.avatar-lg{width:120px;height:120px}
+.view-counter{display:flex;align-items:center;gap:4px;font-size:12px;color:#888}
+.social-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all 0.3s}
+.social-btn:hover{transform:scale(1.1)}
+.tg-btn{background:#0088cc}
+.vk-btn{background:#4c75a3}
+.toast{position:fixed;bottom:20px;right:20px;padding:16px 24px;border-radius:8px;z-index:2000;transform:translateX(150%);transition:transform 0.3s;font-weight:bold}
+.toast.show{transform:translateX(0)}
+.toast.success{background:#22c55e;color:white}
+.toast.error{background:#ef4444;color:white}
+.unread-badge{position:absolute;top:-5px;right:-5px;background:var(--rust-orange);color:white;font-size:10px;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.image-upload-preview{width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-top:10px}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--rust-darker)}
+::-webkit-scrollbar-thumb{background:var(--rust-metal);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#444}
 </style>
 </head>
 <body>
-<div id="app" class="flex flex-col h-screen overflow-hidden">
-    <header class="h-16 bg-[#1a1a1a] border-b border-[#333] shrink-0 z-50 relative">
-        <div class="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="app.nav('listings')">
-                <img src="https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg" class="h-8 opacity-90">
-                <span class="rust-font text-2xl text-white tracking-widest">RUST<span class="text-rust-orange">EX</span></span>
-            </div>
-            <nav class="hidden md:flex h-full" id="mainNav">
-                <div class="nav-item active" data-page="listings" onclick="app.nav('listings')">ОБЪЯВЛЕНИЯ</div>
-                <div class="nav-item relative" data-page="messages" onclick="app.nav('messages')">
-                    СООБЩЕНИЯ <span id="unreadCount" class="ml-2 bg-red-600 text-white text-[10px] px-1.5 rounded-full hidden">0</span>
-                </div>
-                <div class="nav-item" data-page="profile" onclick="app.nav('profile')">ПРОФИЛЬ</div>
-            </nav>
-            <div class="flex items-center gap-4">
-                <div id="authBtns">
-                    <button class="rust-btn" onclick="modal.show('login')">ВОЙТИ</button>
-                </div>
-                <div id="userMenu" class="hidden flex items-center gap-3 cursor-pointer hover:opacity-80" onclick="app.nav('profile')">
-                    <div class="text-right hidden sm:block">
-                        <div id="headerUser" class="font-bold text-sm leading-tight"></div>
-                        <div id="headerNick" class="text-xs text-[#888] leading-tight"></div>
-                    </div>
-                    <img id="headerAvatar" src="" class="w-9 h-9 rounded bg-[#333] object-cover border border-[#444]">
-                </div>
-            </div>
-        </div>
-    </header>
-    <main class="flex-1 overflow-y-auto bg-[#0e0e0e] relative">
-        <div class="max-w-7xl mx-auto px-4 py-8 min-h-full">
-            <div id="page-listings" class="page-section">
-                <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 border-b border-[#222] pb-6">
-                    <div>
-                        <h1 class="rust-font text-3xl text-white mb-2">ПОИСК ТИММЕЙТОВ</h1>
-                        <p class="text-[#666]">Находи кланы, друзей и работу за серу</p>
-                    </div>
-                    <button id="createBtn" class="rust-btn red hidden" onclick="app.createListing()">+ СОЗДАТЬ ОБЪЯВЛЕНИЕ</button>
-                </div>
-                <div class="flex flex-wrap gap-2 mb-8">
-                    <button class="rust-btn text-xs" onclick="app.filter('all')">ВСЕ</button>
-                    <button class="rust-btn text-xs" style="background:#222" onclick="app.filter('team')">🎮 В ТИММУ</button>
-                    <button class="rust-btn text-xs" style="background:#222" onclick="app.filter('teammate')">👤 НАПАРНИК</button>
-                    <button class="rust-btn text-xs" style="background:#222" onclick="app.filter('clan')">🏰 КЛАН</button>
-                    <button class="rust-btn text-xs" style="background:#222" onclick="app.filter('work')">⛏️ РАБОТА</button>
-                </div>
-                <div id="listingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                <div id="listingsEmpty" class="hidden text-center py-20 opacity-50">
-                    <div class="text-6xl mb-4">☢️</div>
-                    <div class="rust-font">ЗДЕСЬ ПУСТО... ПОКА ЧТО</div>
-                </div>
-            </div>
-            <div id="page-profile" class="page-section hidden">
-                <div class="rust-panel p-6 md:p-8 rounded mb-8">
-                    <div class="flex flex-col md:flex-row gap-8 items-start">
-                        <div class="relative group">
-                            <img id="profAvatar" src="" class="w-32 h-32 object-cover bg-[#222] border-2 border-[#444]">
-                            <label class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition">
-                                📷
-                                <input type="file" class="hidden" accept="image/*" onchange="app.uploadAvatar(this)">
-                            </label>
-                        </div>
-                        <div class="flex-1 w-full">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h1 id="profUsername" class="rust-font text-3xl text-white"></h1>
-                                    <div class="flex items-center gap-2 text-[#888] mt-1">
-                                        <span>STEAM/GAME NICK:</span>
-                                        <span id="profGameNick" class="text-rust-orange font-bold"></span>
-                                    </div>
-                                </div>
-                                <button class="rust-btn text-xs" onclick="modal.show('editProfile')">РЕДАКТИРОВАТЬ</button>
-                            </div>
-                            <div class="mt-6 p-4 bg-[#151515] border border-[#222] rounded min-h-[80px]">
-                                <p id="profDesc" class="whitespace-pre-wrap text-[#aaa]"></p>
-                            </div>
-                            <div class="flex gap-4 mt-4" id="profSocials"></div>
-                        </div>
-                    </div>
-                </div>
-                <h2 class="rust-font text-xl mb-4 text-[#666]">МОИ ОБЪЯВЛЕНИЯ</h2>
-                <div id="myListings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                <div class="mt-8 border-t border-[#222] pt-4 text-right">
-                    <button onclick="app.logout()" class="text-red-800 hover:text-red-500 text-sm font-bold uppercase">Выйти из аккаунта</button>
-                </div>
-            </div>
-            <div id="page-messages" class="page-section hidden h-[calc(100vh-140px)]">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
-                    <div class="rust-panel flex flex-col rounded overflow-hidden h-full">
-                        <div class="p-3 bg-[#222] border-b border-[#333] font-bold text-[#888] text-sm uppercase tracking-wider">Диалоги</div>
-                        <div id="chatList" class="flex-1 overflow-y-auto p-2 space-y-1"></div>
-                    </div>
-                    <div class="rust-panel md:col-span-2 flex flex-col rounded overflow-hidden h-full relative">
-                        <div id="chatHeader" class="p-3 bg-[#222] border-b border-[#333] flex justify-between items-center hidden">
-                            <div class="flex items-center gap-3">
-                                <img id="chatHeaderAvatar" class="w-8 h-8 rounded bg-black">
-                                <span id="chatHeaderName" class="font-bold text-white"></span>
-                            </div>
-                        </div>
-                        <div id="chatMessages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2 bg-[#111]">
-                            <div class="text-center text-[#444] mt-20">Выберите диалог слева</div>
-                        </div>
-                        <div id="chatInputArea" class="p-3 bg-[#222] border-t border-[#333] hidden">
-                            <form onsubmit="app.sendMessage(event)" class="flex gap-2">
-                                <input type="text" id="msgInput" class="rust-input" placeholder="Напишите сообщение..." autocomplete="off">
-                                <button type="submit" class="rust-btn">➤</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="page-viewListing" class="page-section hidden">
-                <button onclick="app.nav('listings')" class="mb-4 text-[#666] hover:text-white uppercase font-bold text-xs">← Назад</button>
-                <div class="rust-panel rounded overflow-hidden max-w-4xl mx-auto">
-                    <div id="viewListImg" class="h-64 w-full bg-cover bg-center relative">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#1e1e1e] to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 p-6">
-                             <span id="viewListCat" class="bg-rust-orange text-white px-2 py-1 text-xs font-bold uppercase mb-2 inline-block"></span>
-                             <h1 id="viewListTitle" class="rust-font text-3xl text-white drop-shadow-md"></h1>
-                        </div>
-                    </div>
-                    <div class="p-6 md:p-8 flex flex-col md:flex-row gap-8">
-                        <div class="flex-1">
-                            <div class="mb-6 p-4 bg-[#151515] border border-[#333] rounded">
-                                <p id="viewListDesc" class="whitespace-pre-wrap text-[#ccc] leading-relaxed"></p>
-                            </div>
-                            <div class="flex gap-4 items-center text-sm text-[#666]">
-                                <span>📅 <span id="viewListDate"></span></span>
-                                <span>👁 <span id="viewListViews">0</span></span>
-                            </div>
-                        </div>
-                        <div class="md:w-72 flex-shrink-0">
-                            <div class="bg-[#252525] p-4 rounded border border-[#444]">
-                                <div class="flex items-center gap-3 mb-4 pb-4 border-b border-[#444] cursor-pointer hover:opacity-80" onclick="app.viewProfile(currentViewListing.user_id)">
-                                    <img id="viewListAvatar" class="w-12 h-12 rounded bg-black object-cover">
-                                    <div>
-                                        <div id="viewListUser" class="font-bold text-white"></div>
-                                        <div id="viewListNick" class="text-xs text-rust-orange"></div>
-                                    </div>
-                                </div>
-                                <div class="space-y-3">
-                                    <div id="viewListSocials" class="flex flex-col gap-2"></div>
-                                    <button id="writeMsgBtn" class="rust-btn w-full mt-2">НАПИСАТЬ</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+<div id="app">
+<header class="sticky top-0 z-50 metal-texture" style="background:linear-gradient(180deg,rgba(26,26,26,0.98),rgba(13,13,13,0.98));border-bottom:2px solid #333">
+<div class="max-w-7xl mx-auto px-4">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3 cursor-pointer" onclick="showPage('listings')">
+<img src="https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg" alt="Rust" class="h-10">
+<div>
+<span class="rust-font text-xl" style="color:var(--rust-orange)">RustEx</span>
+<span class="rust-font text-xl text-white">Searching</span>
 </div>
-<div id="loginModal" class="modal">
-    <div class="rust-panel p-8 w-96 rounded relative">
-        <button onclick="modal.close()" class="absolute top-2 right-4 text-2xl text-[#666] hover:text-white">×</button>
-        <h2 class="rust-font text-2xl text-center mb-6 text-white">ВХОД</h2>
-        <form onsubmit="app.login(event)">
-            <div class="mb-4">
-                <label class="text-xs text-[#888] mb-1 block uppercase">Email</label>
-                <input type="email" id="logEmail" class="rust-input" required>
-            </div>
-            <div class="mb-6">
-                <label class="text-xs text-[#888] mb-1 block uppercase">Пароль</label>
-                <input type="password" id="logPass" class="rust-input" required>
-            </div>
-            <button type="submit" class="rust-btn w-full py-3">ВОЙТИ</button>
-        </form>
-        <div class="text-center mt-4 text-xs text-[#666]">Нет аккаунта? <span onclick="modal.switch('register')" class="text-rust-orange cursor-pointer hover:underline">Регистрация</span></div>
-    </div>
 </div>
-<div id="registerModal" class="modal">
-    <div class="rust-panel p-8 w-96 rounded relative">
-        <button onclick="modal.close()" class="absolute top-2 right-4 text-2xl text-[#666] hover:text-white">×</button>
-        <h2 class="rust-font text-2xl text-center mb-6 text-white">РЕГИСТРАЦИЯ</h2>
-        <form onsubmit="app.register(event)">
-            <div class="mb-3">
-                <label class="text-xs text-[#888] mb-1 block uppercase">Имя пользователя (Логин)</label>
-                <input type="text" id="regName" class="rust-input" required minlength="3" placeholder="Придумайте логин">
-                <div class="text-[10px] text-[#555] mt-1">Будет использоваться для входа и поиска</div>
-            </div>
-            <div class="mb-3">
-                <label class="text-xs text-[#888] mb-1 block uppercase">Email</label>
-                <input type="email" id="regEmail" class="rust-input" required>
-            </div>
-            <div class="mb-6">
-                <label class="text-xs text-[#888] mb-1 block uppercase">Пароль</label>
-                <input type="password" id="regPass" class="rust-input" required minlength="6">
-            </div>
-            <button type="submit" class="rust-btn w-full py-3">СОЗДАТЬ АККАУНТ</button>
-        </form>
-        <div class="text-center mt-4 text-xs text-[#666]">Есть аккаунт? <span onclick="modal.switch('login')" class="text-rust-orange cursor-pointer hover:underline">Войти</span></div>
-    </div>
+<nav class="hidden md:flex items-center" id="mainNav">
+<div class="nav-link active" onclick="showPage('listings')">
+<span>🎯</span> Объявления
 </div>
-<div id="createListingModal" class="modal">
-    <div class="rust-panel p-6 w-full max-w-lg rounded relative max-h-[90vh] overflow-y-auto">
-        <button onclick="modal.close()" class="absolute top-2 right-4 text-2xl text-[#666] hover:text-white">×</button>
-        <h2 class="rust-font text-xl mb-4 text-white">НОВОЕ ОБЪЯВЛЕНИЕ</h2>
-        <form onsubmit="app.submitListing(event)">
-            <div class="mb-4">
-                <label class="text-xs text-[#888] uppercase block mb-1">Категория</label>
-                <select id="clCat" class="rust-input bg-[#222]" required>
-                    <option value="team">🎮 Ищу пати (Team)</option>
-                    <option value="teammate">👤 Ищу напарника (Duo/Trio)</option>
-                    <option value="clan">🏰 Набор в клан / Ищу клан</option>
-                    <option value="work">⛏️ Фармер / Электрик / Рабочий</option>
-                </select>
-            </div>
-            <div class="mb-4">
-                <label class="text-xs text-[#888] uppercase block mb-1">Заголовок (макс 30)</label>
-                <input type="text" id="clTitle" class="rust-input" maxlength="30" required placeholder="Например: Ищу дуо на Rustafied">
-            </div>
-            <div class="mb-4">
-                <label class="text-xs text-[#888] uppercase block mb-1">Описание</label>
-                <textarea id="clDesc" class="rust-input h-24" required placeholder="Опишите свой опыт, часы, требования..."></textarea>
-            </div>
-            <div class="mb-4">
-                <label class="text-xs text-[#888] uppercase block mb-2">Изображение (Необязательно)</label>
-                <input type="file" id="clFile" accept="image/*" class="rust-input text-sm">
-            </div>
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                    <label class="text-xs text-[#888] uppercase block mb-1">Ник в игре</label>
-                    <input type="text" id="clNick" class="rust-input" required>
-                </div>
-                <div>
-                    <label class="text-xs text-[#888] uppercase block mb-1">VK (ссылка или ID)</label>
-                    <input type="text" id="clVk" class="rust-input" placeholder="@id или ссылка">
-                </div>
-            </div>
-            <button type="submit" class="rust-btn w-full py-3">ОПУБЛИКОВАТЬ</button>
-        </form>
-    </div>
+<div class="nav-link relative" onclick="showPage('messages')" id="messagesNavBtn" style="display:none">
+<span>💬</span> Сообщения
+<span class="unread-badge" id="unreadBadge" style="display:none">0</span>
 </div>
-<div id="editProfileModal" class="modal">
-    <div class="rust-panel p-6 w-full max-w-md rounded relative">
-        <button onclick="modal.close()" class="absolute top-2 right-4 text-2xl text-[#666] hover:text-white">×</button>
-        <h2 class="rust-font text-xl mb-4 text-white">НАСТРОЙКИ ПРОФИЛЯ</h2>
-        <form onsubmit="app.saveProfile(event)">
-            <div class="mb-3">
-                <label class="text-xs text-[#888] uppercase block mb-1">Имя пользователя</label>
-                <input type="text" id="edUsername" class="rust-input" disabled title="Нельзя изменить">
-            </div>
-            <div class="mb-3">
-                <label class="text-xs text-[#888] uppercase block mb-1">Ник в игре / Steam</label>
-                <input type="text" id="edGameNick" class="rust-input" placeholder="Ваш ник">
-            </div>
-            <div class="mb-3">
-                <label class="text-xs text-[#888] uppercase block mb-1">О себе</label>
-                <textarea id="edDesc" class="rust-input h-24" placeholder="Напишите пару слов о себе"></textarea>
-            </div>
-            <div class="grid grid-cols-2 gap-3 mb-6">
-                <div>
-                    <label class="text-xs text-[#888] uppercase block mb-1">Telegram</label>
-                    <input type="text" id="edTg" class="rust-input" placeholder="@username">
-                </div>
-                <div>
-                    <label class="text-xs text-[#888] uppercase block mb-1">VK</label>
-                    <input type="text" id="edVk" class="rust-input" placeholder="@id или ссылка">
-                </div>
-            </div>
-            <button type="submit" class="rust-btn w-full">СОХРАНИТЬ</button>
-        </form>
-    </div>
+<div class="nav-link" onclick="showPage('profile')" id="profileNavBtn" style="display:none">
+<span>👤</span> Профиль
 </div>
-<div id="toast" class="toast">Message</div>
-<script>
-const SUPABASE_URL = 'https://jerzhimcsxmgyxnwrojf.supabase.co'; 
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplcnpoaW1jc3htZ3l4bndyb2pmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzE0NDMsImV4cCI6MjA3OTkwNzQ0M30.zsZvnuqrtjahyeUr0nhXthbgKOwb3Yz_bsVC4rvfKPM';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const state = {
-    user: null,
-    profile: null,
-    activePage: 'listings',
-    filter: 'all',
-    chatPartner: null
-};
-let currentViewListing = null;
-const app = {
-    async init() {
-        sb.auth.onAuthStateChange(async (event, session) => {
-            state.user = session?.user || null;
-            if (state.user) {
-                await app.loadProfile();
-                document.getElementById('authBtns').classList.add('hidden');
-                document.getElementById('userMenu').classList.remove('hidden');
-                document.getElementById('userMenu').classList.add('flex');
-                document.getElementById('createBtn').classList.remove('hidden');
-                app.checkMessages();
-            } else {
-                state.profile = null;
-                document.getElementById('authBtns').classList.remove('hidden');
-                document.getElementById('userMenu').classList.add('hidden');
-                document.getElementById('userMenu').classList.remove('flex');
-                document.getElementById('createBtn').classList.add('hidden');
-                app.nav('listings'); 
-            }
-            app.renderHeader();
-        });
-        app.loadListings();
-    },
-    nav(page) {
-        document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        if (page === 'messages' || page === 'profile') {
-            if (!state.user) return modal.show('login');
-        }
-        document.getElementById(`page-${page}`).classList.remove('hidden');
-        const navBtn = document.querySelector(`.nav-item[data-page="${page}"]`);
-        if(navBtn) navBtn.classList.add('active');
-        state.activePage = page;
-        if(page === 'listings') app.loadListings();
-        if(page === 'profile') app.renderProfilePage();
-        if(page === 'messages') app.loadChats();
-    },
-    async loadProfile() {
-        if (!state.user) return;
-        const { data, error } = await sb.from('rustex_profiles').select('*').eq('user_id', state.user.id).single();
-        if (data) state.profile = data;
-    },
-    renderHeader() {
-        if (state.profile) {
-            document.getElementById('headerUser').innerText = state.profile.username;
-            document.getElementById('headerNick').innerText = state.profile.game_nick || 'Без ника';
-            document.getElementById('headerAvatar').src = state.profile.avatar_url || `https://ui-avatars.com/api/?name=${state.profile.username}&background=567236&color=fff`;
-        }
-    },
-    async register(e) {
-        e.preventDefault();
-        const username = document.getElementById('regName').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const password = document.getElementById('regPassword').value;
-        const { data: exist } = await sb.from('rustex_profiles').select('id').eq('username', username).maybeSingle();
-        if (exist) return toast.show('Это имя пользователя уже занято', 'error');
-        const { data, error } = await sb.auth.signUp({ email, password });
-        if (error) return toast.show(error.message, 'error');
-        if (data.user) {
-            const { error: profError } = await sb.from('rustex_profiles').insert({
-                user_id: data.user.id,
-                username: username,
-                email: email
-            });
-            modal.close();
-            toast.show('Аккаунт создан! Проверьте почту.', 'success');
-        }
-    },
-    async login(e) {
-        e.preventDefault();
-        const email = document.getElementById('logEmail').value.trim();
-        const password = document.getElementById('logPass').value;
-        const { error } = await sb.auth.signInWithPassword({ email, password });
-        if (error) return toast.show('Ошибка входа: ' + error.message, 'error');
-        modal.close();
-        toast.show('Добро пожаловать!');
-    },
-    async logout() {
-        await sb.auth.signOut();
-        window.location.reload();
-    },
-    async loadListings() {
-        let query = sb.from('rustex_listings').select('*, rustex_profiles(username, avatar_url)').order('created_at', { ascending: false });
-        if (state.filter !== 'all') query = query.eq('category', state.filter);
-        const { data, error } = await query;
-        if (error) return console.error(error);
-        const grid = document.getElementById('listingsGrid');
-        const empty = document.getElementById('listingsEmpty');
-        grid.innerHTML = '';
-        if (!data || data.length === 0) {
-            empty.classList.remove('hidden');
-            return;
-        }
-        empty.classList.add('hidden');
-        data.forEach(item => {
-            const cats = {team:'TEAM', teammate:'DUO/TRIO', clan:'CLAN', work:'WORK'};
-            const card = document.createElement('div');
-            card.className = 'rust-panel listing-card rounded overflow-hidden cursor-pointer bg-[#1a1a1a]';
-            card.onclick = () => app.viewListing(item.id);
-            card.innerHTML = `
-                <div class="h-32 bg-cover bg-center relative" style="background-image:url('${item.image_url}')">
-                    <div class="absolute top-2 left-2 bg-black/70 px-2 py-1 text-[10px] font-bold text-white uppercase border border-white/20">
-                        ${cats[item.category] || item.category}
-                    </div>
-                </div>
-                <div class="p-3">
-                    <h3 class="font-bold text-white truncate text-sm mb-1">${app.esc(item.title)}</h3>
-                    <div class="flex items-center gap-2 mt-2 pt-2 border-t border-[#333]">
-                        <img src="${item.rustex_profiles?.avatar_url || 'https://placehold.co/40'}" class="w-6 h-6 rounded-full">
-                        <span class="text-xs text-[#888] truncate">${app.esc(item.rustex_profiles?.username)}</span>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    },
-    filter(cat) {
-        state.filter = cat;
-        app.loadListings();
-    },
-    async createListing() {
-        if (!state.user) return modal.show('login');
-        if(!state.profile.game_nick || state.profile.game_nick === '') {
-            toast.show('Сначала укажи ник в профиле!', 'error');
-            app.nav('profile');
-            setTimeout(() => modal.show('editProfile'), 500);
-            return;
-        }
-        document.getElementById('clNick').value = state.profile.game_nick;
-        document.getElementById('clVk').value = state.profile.vk !== '-' ? state.profile.vk : '';
-        document.getElementById('clFile').value = '';
-        modal.show('createListing');
-    },
-    async submitListing(e) {
-        e.preventDefault();
-        let imgUrl = 'https://files.facepunch.com/paddy/20230801/header_bg.jpg';
-        const fileInput = document.getElementById('clFile');
-        
-        if(fileInput.files && fileInput.files[0]) {
-            const file = fileInput.files[0];
-            if(file.size > 3000000) return toast.show('Картинка слишком большая (макс 3МБ)', 'error');
-            try {
-                imgUrl = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => resolve(e.target.result);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                });
-            } catch(err) {
-                return toast.show('Ошибка загрузки фото', 'error');
-            }
-        }
+</nav>
+<div class="flex items-center gap-3">
+<div id="authButtons">
+<button class="rust-btn text-sm" onclick="showModal('loginModal')">Войти</button>
+</div>
+<div id="userMenu" style="display:none" class="flex items-center gap-3 cursor-pointer" onclick="showPage('profile')">
+<img id="headerAvatar" src="" class="w-10 h-10 rounded-full border-2 border-orange-500">
+<span id="headerUsername" class="hidden md:block font-medium"></span>
+</div>
+</div>
+</div>
+</div>
+</header>
 
-        const form = {
-            user_id: state.user.id,
-            category: document.getElementById('clCat').value,
-            title: document.getElementById('clTitle').value,
-            description: document.getElementById('clDesc').value,
-            image_url: imgUrl,
-            game_nick: document.getElementById('clNick').value,
-            vk: app.formatVk(document.getElementById('clVk').value),
-            telegram: '-' 
-        };
-        const { error } = await sb.from('rustex_listings').insert(form);
-        if (error) return toast.show(error.message, 'error');
-        modal.close();
-        toast.show('Опубликовано!');
-        app.loadListings();
-        document.querySelector('#createListingModal form').reset();
-    },
-    async viewListing(id) {
-        const { data, error } = await sb.from('rustex_listings').select('*, rustex_profiles(*)').eq('id', id).single();
-        if (error || !data) return toast.show('Ошибка загрузки', 'error');
-        currentViewListing = data;
-        const p = data.rustex_profiles;
-        document.getElementById('viewListTitle').innerText = data.title;
-        document.getElementById('viewListDesc').innerText = data.description;
-        document.getElementById('viewListCat').innerText = data.category;
-        document.getElementById('viewListImg').style.backgroundImage = `url('${data.image_url}')`;
-        document.getElementById('viewListViews').innerText = (data.views || 0) + 1;
-        document.getElementById('viewListDate').innerText = new Date(data.created_at).toLocaleDateString();
-        document.getElementById('viewListUser').innerText = p.username;
-        document.getElementById('viewListNick').innerText = '🎮 ' + data.game_nick;
-        document.getElementById('viewListAvatar').src = p.avatar_url || 'https://placehold.co/100';
-        const socialsDiv = document.getElementById('viewListSocials');
-        socialsDiv.innerHTML = '';
-        if(data.vk && data.vk !== '-') {
-            socialsDiv.innerHTML += `<a href="${data.vk}" target="_blank" class="block bg-[#2787F5] text-white text-center text-xs font-bold py-2 rounded hover:opacity-90">VKONTAKTE</a>`;
-        }
-        const btn = document.getElementById('writeMsgBtn');
-        if(state.user && state.user.id === data.user_id) {
-            btn.innerText = 'ЭТО ВАШЕ ОБЪЯВЛЕНИЕ';
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-        } else {
-            btn.innerText = 'НАПИСАТЬ СООБЩЕНИЕ';
-            btn.disabled = false;
-            btn.classList.remove('opacity-50');
-            btn.onclick = () => app.startChat(data.user_id);
-        }
-        app.nav('viewListing');
-        sb.from('rustex_listings').update({ views: (data.views || 0) + 1 }).eq('id', id).then();
-    },
-    async viewProfile(userId) {
-        if(state.user && userId === state.user.id) return app.nav('profile');
-    },
-    async renderProfilePage() {
-        if(!state.profile) return;
-        const p = state.profile;
-        document.getElementById('profUsername').innerText = p.username;
-        document.getElementById('profGameNick').innerText = p.game_nick || 'Не указан';
-        document.getElementById('profDesc').innerText = p.description || 'Описание отсутствует...';
-        document.getElementById('profAvatar').src = p.avatar_url || `https://ui-avatars.com/api/?name=${p.username}`;
-        const { data } = await sb.from('rustex_listings').select('*').eq('user_id', state.user.id);
-        const listDiv = document.getElementById('myListings');
-        listDiv.innerHTML = (data || []).map(l => `
-            <div class="rust-panel p-3 flex justify-between items-center bg-[#1a1a1a]">
-                <div class="font-bold truncate w-1/2 text-white text-sm">${app.esc(l.title)}</div>
-                <button class="text-red-500 hover:text-red-400 text-xs uppercase font-bold" onclick="app.deleteListing('${l.id}')">Удалить</button>
-            </div>
-        `).join('') || '<div class="text-[#444] text-sm">Нет активных объявлений</div>';
-        document.getElementById('edUsername').value = p.username;
-        document.getElementById('edGameNick').value = p.game_nick;
-        document.getElementById('edDesc').value = p.description;
-        document.getElementById('edVk').value = p.vk === '-' ? '' : p.vk;
-        document.getElementById('edTg').value = p.telegram === '-' ? '' : p.telegram;
-    },
-    async saveProfile(e) {
-        e.preventDefault();
-        const updates = {
-            game_nick: document.getElementById('edGameNick').value,
-            description: document.getElementById('edDesc').value,
-            vk: app.formatVk(document.getElementById('edVk').value),
-            telegram: document.getElementById('edTg').value || '-'
-        };
-        const { error } = await sb.from('rustex_profiles').update(updates).eq('user_id', state.user.id);
-        if(error) return toast.show(error.message, 'error');
-        await app.loadProfile();
-        modal.close();
-        app.renderProfilePage();
-        toast.show('Профиль сохранен');
-    },
-    async uploadAvatar(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                const base64 = e.target.result;
-                if(base64.length > 3000000) return toast.show('Файл слишком большой!', 'error');
-                await sb.from('rustex_profiles').update({ avatar_url: base64 }).eq('user_id', state.user.id);
-                app.loadProfile().then(() => app.renderProfilePage());
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    },
-    async deleteListing(id) {
-        if(!confirm('Удалить объявление?')) return;
-        await sb.from('rustex_listings').delete().eq('id', id);
-        app.renderProfilePage();
-    },
-    async startChat(targetId) {
-        if(!state.user) return modal.show('login');
-        state.chatPartner = targetId;
-        app.nav('messages');
-        app.loadMessages(targetId);
-    },
-    async loadChats() {
-        const { data: sent } = await sb.from('rustex_messages').select('receiver_id').eq('sender_id', state.user.id);
-        const { data: recv } = await sb.from('rustex_messages').select('sender_id').eq('receiver_id', state.user.id);
-        const ids = new Set([...(sent||[]).map(x=>x.receiver_id), ...(recv||[]).map(x=>x.sender_id)]);
-        if(ids.size === 0) {
-            document.getElementById('chatList').innerHTML = '<div class="text-[#444] text-center text-xs mt-4">Нет чатов</div>';
-            return;
-        }
-        const { data: users } = await sb.from('rustex_profiles').select('*').in('user_id', Array.from(ids));
-        document.getElementById('chatList').innerHTML = users.map(u => `
-            <div class="p-3 hover:bg-[#2a2a2a] cursor-pointer flex items-center gap-3 rounded transition ${state.chatPartner === u.user_id ? 'bg-[#2a2a2a] border-l-2 border-rust-orange' : ''}" onclick="app.loadMessages('${u.user_id}')">
-                <img src="${u.avatar_url || 'https://placehold.co/30'}" class="w-8 h-8 rounded-full bg-black">
-                <div class="overflow-hidden">
-                    <div class="text-white text-sm font-bold truncate">${app.esc(u.username)}</div>
-                    <div class="text-[#666] text-xs truncate">Нажмите для чата</div>
-                </div>
-            </div>
-        `).join('');
-    },
-    async loadMessages(partnerId) {
-        state.chatPartner = partnerId;
-        document.getElementById('chatHeader').classList.remove('hidden');
-        document.getElementById('chatInputArea').classList.remove('hidden');
-        const { data: partner } = await sb.from('rustex_profiles').select('*').eq('user_id', partnerId).single();
-        document.getElementById('chatHeaderName').innerText = partner.username;
-        document.getElementById('chatHeaderAvatar').src = partner.avatar_url || 'https://placehold.co/30';
-        const { data } = await sb.from('rustex_messages').select('*')
-            .or(`and(sender_id.eq.${state.user.id},receiver_id.eq.${partnerId}),and(sender_id.eq.${partnerId},receiver_id.eq.${state.user.id})`)
-            .order('created_at', {ascending: true});
-        const container = document.getElementById('chatMessages');
-        container.innerHTML = data.map(m => `
-            <div class="chat-msg ${m.sender_id === state.user.id ? 'me' : 'them'}">
-                ${app.esc(m.content)}
-            </div>
-        `).join('');
-        container.scrollTop = container.scrollHeight;
-        await sb.from('rustex_messages').update({is_read: true}).eq('sender_id', partnerId).eq('receiver_id', state.user.id);
-    },
-    async sendMessage(e) {
-        e.preventDefault();
-        const inp = document.getElementById('msgInput');
-        const txt = inp.value.trim();
-        if(!txt || !state.chatPartner) return;
-        await sb.from('rustex_messages').insert({
-            sender_id: state.user.id,
-            receiver_id: state.chatPartner,
-            content: txt
-        });
-        inp.value = '';
-        app.loadMessages(state.chatPartner);
-    },
-    async checkMessages() {
-        const { count } = await sb.from('rustex_messages').select('*', { count: 'exact', head: true }).eq('receiver_id', state.user.id).eq('is_read', false);
-        const badge = document.getElementById('unreadCount');
-        if(count > 0) {
-            badge.innerText = count;
-            badge.classList.remove('hidden');
-        } else {
-            badge.classList.add('hidden');
-        }
-    },
-    formatVk(val) {
-        if(!val || val === '-' || val.trim() === '') return '-';
-        val = val.trim();
-        if(val.startsWith('http')) return val;
-        return 'https://vk.com/' + val.replace('@', '');
-    },
-    esc(str) {
-        if(!str) return '';
-        return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
+<main class="max-w-7xl mx-auto px-4 py-8">
+<div id="listingsPage">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+<div>
+<h1 class="rust-font text-3xl mb-2" style="color:var(--rust-orange)">Объявления</h1>
+<p class="text-gray-400">Найди тиммейтов, клан или работу в Rust</p>
+</div>
+<button class="rust-btn" onclick="createListing()" id="createListingBtn" style="display:none">
++ Создать объявление
+</button>
+</div>
+
+<div class="flex flex-wrap gap-2 mb-6">
+<button class="category-filter px-4 py-2 rounded-full text-sm transition-all bg-orange-600" data-category="all" onclick="filterCategory('all')">Все</button>
+<button class="category-filter px-4 py-2 rounded-full text-sm transition-all bg-gray-700 hover:bg-gray-600" data-category="team" onclick="filterCategory('team')">🎮 Поиск в тимму</button>
+<button class="category-filter px-4 py-2 rounded-full text-sm transition-all bg-gray-700 hover:bg-gray-600" data-category="teammate" onclick="filterCategory('teammate')">👥 Поиск напарника</button>
+<button class="category-filter px-4 py-2 rounded-full text-sm transition-all bg-gray-700 hover:bg-gray-600" data-category="clan_search" onclick="filterCategory('clan_search')">🏰 Ищу клан</button>
+<button class="category-filter px-4 py-2 rounded-full text-sm transition-all bg-gray-700 hover:bg-gray-600" data-category="clan_recruit" onclick="filterCategory('clan_recruit')">⚔️ Набор в клан</button>
+<button class="category-filter px-4 py-2 rounded-full text-sm transition-all bg-gray-700 hover:bg-gray-600" data-category="farmer" onclick="filterCategory('farmer')">🌾 Фармер</button>
+<button class="category-filter px-4 py-2 rounded-full text-sm transition-all bg-gray-700 hover:bg-gray-600" data-category="pvp" onclick="filterCategory('pvp')">💀 ПВПшер</button>
+</div>
+
+<div id="listingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+<div id="listingsEmpty" class="text-center py-20" style="display:none">
+<div class="text-6xl mb-4">🔍</div>
+<h3 class="rust-font text-xl mb-2">Объявлений пока нет</h3>
+<p class="text-gray-400">Будь первым!</p>
+</div>
+</div>
+
+<div id="messagesPage" style="display:none">
+<h1 class="rust-font text-3xl mb-6" style="color:var(--rust-orange)">Сообщения</h1>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="rust-card rounded-lg p-4">
+<h3 class="font-bold mb-4 text-gray-300">Диалоги</h3>
+<div id="chatsList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+</div>
+<div class="lg:col-span-2 rust-card rounded-lg flex flex-col" style="height:500px">
+<div id="chatHeader" class="p-4 border-b border-gray-700 flex items-center gap-3" style="display:none">
+<img id="chatAvatar" src="" class="avatar">
+<div>
+<div id="chatName" class="font-bold"></div>
+<div id="chatNick" class="text-sm text-gray-400"></div>
+</div>
+</div>
+<div id="chatMessages" class="flex-1 p-4 overflow-y-auto"></div>
+<div id="chatInput" class="p-4 border-t border-gray-700" style="display:none">
+<div class="flex gap-2">
+<input type="text" id="messageInput" class="rust-input flex-1" placeholder="Написать сообщение..." onkeypress="if(event.key==='Enter')sendMessage()">
+<button class="rust-btn" onclick="sendMessage()">➤</button>
+</div>
+</div>
+<div id="chatEmpty" class="flex-1 flex items-center justify-center text-gray-500">
+<div class="text-center">
+<div class="text-4xl mb-2">💬</div>
+<p>Выберите диалог</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="profilePage" style="display:none">
+<div class="rust-card rounded-lg p-6 mb-6">
+<div class="flex flex-col md:flex-row gap-6 items-start">
+<div class="relative">
+<img id="profileAvatar" src="" class="avatar avatar-lg">
+<label class="absolute bottom-0 right-0 w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-orange-500">
+<span>📷</span>
+<input type="file" accept="image/*" class="hidden" onchange="uploadAvatar(event)">
+</label>
+</div>
+<div class="flex-1">
+<h2 id="profileUsername" class="rust-font text-2xl mb-2"></h2>
+<div class="flex items-center gap-4 text-sm text-gray-400 mb-4">
+<span>🎮 <span id="profileNick">-</span></span>
+<span>📅 <span id="profileJoined"></span></span>
+</div>
+<div class="flex gap-2 mb-4" id="profileSocials"></div>
+<p id="profileDesc" class="text-gray-300"></p>
+</div>
+<button class="rust-btn text-sm" onclick="showModal('editProfileModal')">Редактировать</button>
+</div>
+</div>
+<h3 class="rust-font text-xl mb-4" style="color:var(--rust-orange)">Мои объявления</h3>
+<div id="myListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</div>
+
+<div id="viewListingPage" style="display:none">
+<button class="mb-4 text-gray-400 hover:text-white" onclick="showPage('listings')">← Назад</button>
+<div class="rust-card rounded-lg overflow-hidden">
+<div id="listingDetail"></div>
+</div>
+</div>
+
+<div id="viewProfilePage" style="display:none">
+<button class="mb-4 text-gray-400 hover:text-white" onclick="showPage('listings')">← Назад</button>
+<div class="rust-card rounded-lg p-6 mb-6">
+<div class="flex flex-col md:flex-row gap-6 items-start">
+<img id="viewProfileAvatar" src="" class="avatar avatar-lg">
+<div class="flex-1">
+<h2 id="viewProfileUsername" class="rust-font text-2xl mb-2"></h2>
+<div class="flex items-center gap-4 text-sm text-gray-400 mb-4">
+<span>🎮 <span id="viewProfileNick">-</span></span>
+</div>
+<div class="flex gap-2 mb-4" id="viewProfileSocials"></div>
+<p id="viewProfileDesc" class="text-gray-300"></p>
+</div>
+<button class="rust-btn text-sm" onclick="startChatWith(viewingUserId)">💬 Написать</button>
+</div>
+</div>
+<h3 class="rust-font text-xl mb-4">Объявления пользователя</h3>
+<div id="userListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</div>
+</main>
+</div>
+
+<!-- Модальные окна -->
+<div id="loginModal" class="modal">
+<div class="rust-card rounded-lg p-8 w-full max-w-md mx-4">
+<h2 class="rust-font text-2xl text-center mb-6" style="color:var(--rust-orange)">Вход</h2>
+<form onsubmit="login(event)">
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Email</label>
+<input type="email" id="loginEmail" class="rust-input" required>
+</div>
+<div class="mb-6">
+<label class="block text-sm mb-2 text-gray-300">Пароль</label>
+<input type="password" id="loginPassword" class="rust-input" required>
+</div>
+<button type="submit" class="rust-btn w-full mb-4">Войти</button>
+<p class="text-center text-gray-400">Нет аккаунта? <span class="text-orange-500 cursor-pointer hover:underline" onclick="switchModal('registerModal')">Регистрация</span></p>
+</form>
+<button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" onclick="hideModal('loginModal')">×</button>
+</div>
+</div>
+
+<div id="registerModal" class="modal">
+<div class="rust-card rounded-lg p-8 w-full max-w-md mx-4 max-h-screen overflow-y-auto">
+<h2 class="rust-font text-2xl text-center mb-6" style="color:var(--rust-orange)">Регистрация</h2>
+<form onsubmit="register(event)">
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Имя пользователя (уникальное, нельзя изменить)</label>
+<input type="text" id="regUsername" class="rust-input" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]+" title="Только буквы, цифры и _">
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Email</label>
+<input type="email" id="regEmail" class="rust-input" required>
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Пароль (минимум 6 символов)</label>
+<input type="password" id="regPassword" class="rust-input" required minlength="6">
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Ник в Rust</label>
+<input type="text" id="regGameNick" class="rust-input" placeholder="Ваш игровой ник" required>
+</div>
+<button type="submit" class="rust-btn w-full mb-4">Создать аккаунт</button>
+<p class="text-center text-gray-400">Есть аккаунт? <span class="text-orange-500 cursor-pointer hover:underline" onclick="switchModal('loginModal')">Войти</span></p>
+</form>
+<button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" onclick="hideModal('registerModal')">×</button>
+</div>
+</div>
+
+<div id="welcomeModal" class="modal">
+<div class="rust-card rounded-lg p-8 w-full max-w-lg mx-4">
+<div class="text-center mb-6">
+<img src="https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg" alt="Rust" class="h-16 mx-auto mb-4">
+<h2 class="rust-font text-2xl" style="color:var(--rust-orange)">Добро пожаловать!</h2>
+</div>
+<div class="text-gray-300 space-y-3 mb-6">
+<p>🎮 <strong>RustEx Searching</strong> — платформа для поиска тиммейтов и кланов</p>
+<p>📝 До <strong>3 объявлений</strong> одновременно</p>
+<p>💬 Встроенный чат</p>
+<p>👤 Заполни профиль!</p>
+</div>
+<button class="rust-btn w-full" onclick="hideModal('welcomeModal');showPage('profile')">Перейти в профиль</button>
+</div>
+</div>
+
+<div id="editProfileModal" class="modal">
+<div class="rust-card rounded-lg p-8 w-full max-w-md mx-4 max-h-screen overflow-y-auto">
+<h2 class="rust-font text-xl text-center mb-6" style="color:var(--rust-orange)">Редактировать профиль</h2>
+<form onsubmit="updateProfile(event)">
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Ник в Rust</label>
+<input type="text" id="editGameNick" class="rust-input">
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Telegram (@username или ссылка)</label>
+<input type="text" id="editTelegram" class="rust-input" placeholder="@username, t.me/username или -">
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">VK (@id, ссылка или id123456)</label>
+<input type="text" id="editVk" class="rust-input" placeholder="@id123, vk.com/id123 или -">
+</div>
+<div class="mb-6">
+<label class="block text-sm mb-2 text-gray-300">О себе (до 500 символов)</label>
+<textarea id="editDescription" class="rust-input" rows="4" maxlength="500"></textarea>
+</div>
+<button type="submit" class="rust-btn w-full">Сохранить</button>
+</form>
+<button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" onclick="hideModal('editProfileModal')">×</button>
+</div>
+</div>
+
+<div id="createListingModal" class="modal">
+<div class="rust-card rounded-lg p-8 w-full max-w-lg mx-4 max-h-screen overflow-y-auto">
+<h2 class="rust-font text-xl text-center mb-6" style="color:var(--rust-orange)">Новое объявление</h2>
+<form onsubmit="submitListing(event)">
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Категория</label>
+<select id="listingCategory" class="rust-input" required>
+<option value="">Выбери категорию</option>
+<option value="team">🎮 Ищу игроков в тимму</option>
+<option value="teammate">👥 Ищу напарника</option>
+<option value="clan_search">🏰 Ищу клан</option>
+<option value="clan_recruit">⚔️ Набор в клан</option>
+<option value="farmer">🌾 Фармер</option>
+<option value="pvp">💀 ПВПшер</option>
+</select>
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Название (до 50 символов)</label>
+<input type="text" id="listingTitle" class="rust-input" required maxlength="50">
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Описание (до 1000 символов)</label>
+<textarea id="listingDesc" class="rust-input" rows="4" required maxlength="1000"></textarea>
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Картинка (прямой выбор)</label>
+<input type="file" accept="image/*" id="listingImageFile" class="rust-input" onchange="previewListingImage(event)">
+<img id="listingImagePreview" class="image-upload-preview" style="display:none">
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">Telegram</label>
+<input type="text" id="listingTelegram" class="rust-input" placeholder="@username или -">
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-300">VK</label>
+<input type="text" id="listingVk" class="rust-input" placeholder="@id или ссылка">
+</div>
+<div class="mb-6">
+<label class="block text-sm mb-2 text-gray-300">Ник в игре</label>
+<input type="text" id="listingNick" class="rust-input" required>
+</div>
+<button type="submit" class="rust-btn w-full">Опубликовать</button>
+</form>
+<button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" onclick="hideModal('createListingModal')">×</button>
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ============= КОНФИГУРАЦИЯ =============
+const SUPABASE_URL = 'https://jerzhimcsxmgyxnwrojf.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplcnpoaW1jc3htZ3l4bndyb2pmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzE0NDMsImV4cCI6MjA3OTkwNzQ0M30.zsZvnuqrtjahyeUr0nhXthbgKOwb3Yz_bsVC4rvfKPM';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ============= ГЛОБАЛЬНОЕ СОСТОЯНИЕ =============
+let currentUser = null;
+let currentProfile = null;
+let currentCategory = 'all';
+let viewingUserId = null;
+let currentChatUserId = null;
+let viewTimer = null;
+let listingImageBase64 = '';
+
+const categoryLabels = {
+  team: '🎮 Поиск в тимму',
+  teammate: '👥 Поиск напарника',
+  clan_search: '🏰 Ищу клан',
+  clan_recruit: '⚔️ Набор в клан',
+  farmer: '🌾 Фармер',
+  pvp: '💀 ПВПшер'
 };
-const modal = {
-    show(id) {
-        document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
-        document.getElementById(id + 'Modal').classList.add('show');
-    },
-    close() {
-        document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
-    },
-    switch(id) {
-        modal.close();
-        setTimeout(() => modal.show(id), 200);
-    }
+
+const categoryColors = {
+  team: 'bg-blue-600',
+  teammate: 'bg-green-600',
+  clan_search: 'bg-purple-600',
+  clan_recruit: 'bg-red-600',
+  farmer: 'bg-yellow-600',
+  pvp: 'bg-pink-600'
 };
-const toast = {
-    show(msg, type = 'success') {
-        const el = document.getElementById('toast');
-        el.innerText = msg;
-        el.className = 'toast show ' + type;
-        setTimeout(() => el.classList.remove('show'), 3000);
+
+// ============= ИНИЦИАЛИЗАЦИЯ БД =============
+async function initDB() {
+  try {
+    // Проверка и создание таблицы профилей
+    const { error: e1 } = await supabase.from('rustex_profiles').select('id').limit(1);
+    if (e1 && e1.code === '42P01') {
+      await supabase.rpc('create_profiles_table', {});
     }
-};
-app.init();
-window.onclick = function(event) {
-    if (event.target.classList.contains('modal')) modal.close();
+
+    // Проверка и создание таблицы объявлений
+    const { error: e2 } = await supabase.from('rustex_listings').select('id').limit(1);
+    if (e2 && e2.code === '42P01') {
+      await supabase.rpc('create_listings_table', {});
+    }
+
+    // Проверка и создание таблицы сообщений
+    const { error: e3 } = await supabase.from('rustex_messages').select('id').limit(1);
+    if (e3 && e3.code === '42P01') {
+      await supabase.rpc('create_messages_table', {});
+    }
+
+    console.log('✅ База данных инициализирована');
+  } catch (err) {
+    console.log('⚠️ Таблицы уже существуют или создаются автоматически:', err.message);
+  }
 }
+
+// ============= ОСНОВНАЯ ИНИЦИАЛИЗАЦИЯ =============
+async function init() {
+  console.log('🚀 Запуск RustEx...');
+  
+  await initDB();
+
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    await loadProfile();
+    updateUIForAuth();
+  }
+
+  loadListings();
+
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      currentUser = session.user;
+      await loadProfile();
+      updateUIForAuth();
+    } else if (event === 'SIGNED_OUT') {
+      currentUser = null;
+      currentProfile = null;
+      updateUIForAuth();
+    }
+  });
+
+  console.log('✅ RustEx готов к работе');
+}
+
+// ============= ЗАГРУЗКА ПРОФИЛЯ =============
+async function loadProfile() {
+  if (!currentUser) return;
+  
+  const { data, error } = await supabase
+    .from('rustex_profiles')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .single();
+
+  if (error) {
+    console.error('Ошибка загрузки профиля:', error);
+    return;
+  }
+
+  if (data) {
+    currentProfile = data;
+    if (data.is_new) {
+      showModal('welcomeModal');
+      await supabase
+        .from('rustex_profiles')
+        .update({ is_new: false })
+        .eq('user_id', currentUser.id);
+    }
+  }
+}
+
+// ============= ОБНОВЛЕНИЕ UI =============
+function updateUIForAuth() {
+  const authBtns = document.getElementById('authButtons');
+  const userMenu = document.getElementById('userMenu');
+  const createBtn = document.getElementById('createListingBtn');
+  const msgNav = document.getElementById('messagesNavBtn');
+  const profNav = document.getElementById('profileNavBtn');
+
+  if (currentUser && currentProfile) {
+    authBtns.style.display = 'none';
+    userMenu.style.display = 'flex';
+    createBtn.style.display = 'block';
+    msgNav.style.display = 'block';
+    profNav.style.display = 'block';
+
+    const avatar = currentProfile.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentProfile.username)}&background=cd412b&color=fff`;
+    document.getElementById('headerAvatar').src = avatar;
+    document.getElementById('headerUsername').textContent = currentProfile.username;
+
+    checkUnreadMessages();
+  } else {
+    authBtns.style.display = 'block';
+    userMenu.style.display = 'none';
+    createBtn.style.display = 'none';
+    msgNav.style.display = 'none';
+    profNav.style.display = 'none';
+  }
+}
+
+// ============= РЕГИСТРАЦИЯ =============
+async function register(e) {
+  e.preventDefault();
+
+  const username = document.getElementById('regUsername').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const gameNick = document.getElementById('regGameNick').value.trim();
+
+  // Проверка уникальности имени пользователя
+  const { data: existing } = await supabase
+    .from('rustex_profiles')
+    .select('username')
+    .eq('username', username)
+    .single();
+
+  if (existing) {
+    showToast('❌ Это имя уже занято!', 'error');
+    return;
+  }
+
+  // Регистрация пользователя
+  const { data, error } = await supabase.auth.signUp({ email, password });
+
+  if (error) {
+    showToast('❌ ' + error.message, 'error');
+    return;
+  }
+
+  if (data.user) {
+    // Создание профиля с ником сразу
+    await supabase.from('rustex_profiles').insert({
+      user_id: data.user.id,
+      username: username,
+      email: email,
+      game_nick: gameNick,
+      avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=cd412b&color=fff`
+    });
+
+    hideModal('registerModal');
+    showToast('✅ Регистрация успешна! Проверьте email', 'success');
+  }
+}
+
+// ============= ВХОД =============
+async function login(e) {
+  e.preventDefault();
+
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    showToast('❌ ' + error.message, 'error');
+    return;
+  }
+
+  hideModal('loginModal');
+  showToast('✅ Добро пожаловать!', 'success');
+}
+
+// ============= ВЫХОД =============
+async function logout() {
+  await supabase.auth.signOut();
+  showPage('listings');
+  showToast('👋 До встречи!', 'success');
+}
+
+// ============= ЗАГРУЗКА ОБЪЯВЛЕНИЙ =============
+async function loadListings() {
+  let query = supabase
+    .from('rustex_listings')
+    .select('*, rustex_profiles!rustex_listings_user_id_fkey(username, avatar_url)')
+    .order('created_at', { ascending: false });
+
+  if (currentCategory !== 'all') {
+    query = query.eq('category', currentCategory);
+  }
+
+  const { data, error } = await query;
+
+  const grid = document.getElementById('listingsGrid');
+  const empty = document.getElementById('listingsEmpty');
+
+  if (error || !data || data.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  grid.innerHTML = data.map(l => `
+    <div class="rust-card listing-card rounded-lg overflow-hidden cursor-pointer" onclick="viewListing('${l.id}')">
+      <div class="h-40 bg-cover bg-center" style="background-image:url('${l.image_url || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'}')">
+        <div class="h-full bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+          <span class="category-badge ${categoryColors[l.category]} rounded">${categoryLabels[l.category]}</span>
+        </div>
+      </div>
+      <div class="p-4">
+        <h3 class="font-bold text-lg mb-2 truncate">${escapeHtml(l.title)}</h3>
+        <p class="text-gray-400 text-sm mb-3 line-clamp-2">${escapeHtml(l.description.substring(0, 100))}...</p>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <img src="${l.rustex_profiles?.avatar_url || 'https://ui-avatars.com/api/?name=U&background=cd412b&color=fff'}" class="w-8 h-8 rounded-full">
+            <span class="text-sm text-gray-300">${escapeHtml(l.rustex_profiles?.username || 'Unknown')}</span>
+          </div>
+          <div class="view-counter">👁 ${l.views || 0}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============= ФИЛЬТР КАТЕГОРИЙ =============
+function filterCategory(cat) {
+  currentCategory = cat;
+  document.querySelectorAll('.category-filter').forEach(b => {
+    b.classList.remove('bg-orange-600');
+    b.classList.add('bg-gray-700');
+    if (b.dataset.category === cat) {
+      b.classList.add('bg-orange-600');
+      b.classList.remove('bg-gray-700');
+    }
+  });
+  loadListings();
+}
+
+// ============= ПРОСМОТР ОБЪЯВЛЕНИЯ =============
+async function viewListing(id) {
+  if (!currentUser) {
+    showToast('❌ Войдите для просмотра', 'error');
+    showModal('loginModal');
+    return;
+  }
+
+  const { data: l } = await supabase
+    .from('rustex_listings')
+    .select('*, rustex_profiles!rustex_listings_user_id_fkey(*)')
+    .eq('id', id)
+    .single();
+
+  if (!l) return;
+
+  showPage('viewListing');
+
+  const tgLink = formatSocialLink(l.telegram, 'telegram');
+  const vkLink = formatSocialLink(l.vk, 'vk');
+
+  document.getElementById('listingDetail').innerHTML = `
+    <div class="md:flex">
+      <div class="md:w-1/2 h-64 md:h-auto bg-cover bg-center" style="background-image:url('${l.image_url || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600'}')"></div>
+      <div class="md:w-1/2 p-6">
+        <span class="category-badge ${categoryColors[l.category]} rounded inline-block mb-3">${categoryLabels[l.category]}</span>
+        <h1 class="rust-font text-2xl mb-4">${escapeHtml(l.title)}</h1>
+        <p class="text-gray-300 mb-6 whitespace-pre-wrap">${escapeHtml(l.description)}</p>
+        
+        <div class="bg-black/30 rounded-lg p-4 mb-6">
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div><span class="text-gray-400">Ник в игре:</span> <span class="text-white font-bold">${escapeHtml(l.game_nick)}</span></div>
+            <div><span class="text-gray-400">Просмотры:</span> <span class="text-white">${l.views || 0}</span></div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 mb-6 cursor-pointer hover:bg-white/5 p-3 rounded-lg transition" onclick="viewProfile('${l.user_id}')">
+          <img src="${l.rustex_profiles?.avatar_url || 'https://ui-avatars.com/api/?name=U&background=cd412b&color=fff'}" class="avatar">
+          <div>
+            <div class="font-bold">${escapeHtml(l.rustex_profiles?.username || 'Unknown')}</div>
+            <div class="text-sm text-gray-400">🎮 ${escapeHtml(l.rustex_profiles?.game_nick || '-')}</div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          ${tgLink ? `<a href="${tgLink}" target="_blank" class="social-btn tg-btn">${telegramIcon}</a>` : ''}
+          ${vkLink ? `<a href="${vkLink}" target="_blank" class="social-btn vk-btn">${vkIcon}</a>` : ''}
+          <button class="rust-btn flex-1" onclick="startChatWith('${l.user_id}')">💬 Написать</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Увеличение просмотров через 5 секунд
+  if (viewTimer) clearTimeout(viewTimer);
+  viewTimer = setTimeout(async () => {
+    if (l.user_id !== currentUser?.id) {
+      await supabase
+        .from('rustex_listings')
+        .update({ views: (l.views || 0) + 1 })
+        .eq('id', id);
+    }
+  }, 5000);
+}
+
+// ============= ПРОСМОТР ПРОФИЛЯ =============
+async function viewProfile(userId) {
+  viewingUserId = userId;
+
+  const { data: p } = await supabase
+    .from('rustex_profiles')
+    .select('*')
+    .eq('user_id', userId)
+    .single();
+
+  if (!p) return;
+
+  showPage('viewProfile');
+
+  document.getElementById('viewProfileAvatar').src = p.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.username)}&background=cd412b&color=fff`;
+  document.getElementById('viewProfileUsername').textContent = p.username;
+  document.getElementById('viewProfileNick').textContent = p.game_nick || '-';
+  document.getElementById('viewProfileDesc').textContent = p.description || 'Описание не заполнено';
+
+  const tgLink = formatSocialLink(p.telegram, 'telegram');
+  const vkLink = formatSocialLink(p.vk, 'vk');
+
+  let socials = '';
+  if (tgLink) socials += `<a href="${tgLink}" target="_blank" class="social-btn tg-btn">${telegramIcon}</a>`;
+  if (vkLink) socials += `<a href="${vkLink}" target="_blank" class="social-btn vk-btn">${vkIcon}</a>`;
+
+  document.getElementById('viewProfileSocials').innerHTML = socials;
+
+  const { data: listings } = await supabase
+    .from('rustex_listings')
+    .select('*')
+    .eq('user_id', userId);
+
+  document.getElementById('userListingsGrid').innerHTML = (listings || []).map(l => `
+    <div class="rust-card listing-card rounded-lg overflow-hidden cursor-pointer" onclick="viewListing('${l.id}')">
+      <div class="h-32 bg-cover bg-center" style="background-image:url('${l.image_url || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'}')"></div>
+      <div class="p-4">
+        <span class="category-badge ${categoryColors[l.category]} rounded text-xs">${categoryLabels[l.category]}</span>
+        <h3 class="font-bold mt-2 truncate">${escapeHtml(l.title)}</h3>
+        <div class="view-counter mt-2">👁 ${l.views || 0}</div>
+      </div>
+    </div>
+  `).join('') || '<p class="text-gray-400 col-span-3 text-center">Нет объявлений</p>';
+}
+
+// ============= ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ =============
+function showPage(page) {
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  ['listingsPage', 'messagesPage', 'profilePage', 'viewListingPage', 'viewProfilePage'].forEach(p => {
+    document.getElementById(p).style.display = 'none';
+  });
+
+  if (page === 'listings') {
+    document.getElementById('listingsPage').style.display = 'block';
+    document.querySelector('[onclick="showPage(\'listings\')"]').classList.add('active');
+    loadListings();
+  } else if (page === 'messages') {
+    if (!currentUser) { showModal('loginModal'); return; }
+    document.getElementById('messagesPage').style.display = 'block';
+    document.getElementById('messagesNavBtn').classList.add('active');
+    loadChats();
+  } else if (page === 'profile') {
+    if (!currentUser) { showModal('loginModal'); return; }
+    document.getElementById('profilePage').style.display = 'block';
+    document.getElementById('profileNavBtn').classList.add('active');
+    loadMyProfile();
+  } else if (page === 'viewListing') {
+    document.getElementById('viewListingPage').style.display = 'block';
+  } else if (page === 'viewProfile') {
+    document.getElementById('viewProfilePage').style.display = 'block';
+  }
+}
+
+// ============= МОЙ ПРОФИЛЬ =============
+async function loadMyProfile() {
+  if (!currentProfile) return;
+
+  document.getElementById('profileAvatar').src = currentProfile.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentProfile.username)}&background=cd412b&color=fff`;
+  document.getElementById('profileUsername').textContent = currentProfile.username;
+  document.getElementById('profileNick').textContent = currentProfile.game_nick || '-';
+  document.getElementById('profileDesc').textContent = currentProfile.description || 'Заполните описание';
+  document.getElementById('profileJoined').textContent = new Date(currentProfile.created_at).toLocaleDateString('ru');
+
+  const tgLink = formatSocialLink(currentProfile.telegram, 'telegram');
+  const vkLink = formatSocialLink(currentProfile.vk, 'vk');
+
+  let socials = '';
+  if (tgLink) socials += `<a href="${tgLink}" target="_blank" class="social-btn tg-btn">${telegramIcon}</a>`;
+  if (vkLink) socials += `<a href="${vkLink}" target="_blank" class="social-btn vk-btn">${vkIcon}</a>`;
+  socials += `<button class="text-sm text-red-500 hover:text-red-400 ml-4 font-bold" onclick="logout()">Выйти</button>`;
+
+  document.getElementById('profileSocials').innerHTML = socials;
+
+  // Заполнение формы редактирования
+  document.getElementById('editGameNick').value = currentProfile.game_nick || '';
+  document.getElementById('editTelegram').value = currentProfile.telegram || '';
+  document.getElementById('editVk').value = currentProfile.vk || '';
+  document.getElementById('editDescription').value = currentProfile.description || '';
+
+  const { data: myListings } = await supabase
+    .from('rustex_listings')
+    .select('*')
+    .eq('user_id', currentUser.id);
+
+  document.getElementById('myListingsGrid').innerHTML = (myListings || []).map(l => `
+    <div class="rust-card listing-card rounded-lg overflow-hidden">
+      <div class="h-32 bg-cover bg-center" style="background-image:url('${l.image_url || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'}')"></div>
+      <div class="p-4">
+        <span class="category-badge ${categoryColors[l.category]} rounded text-xs">${categoryLabels[l.category]}</span>
+        <h3 class="font-bold mt-2 truncate">${escapeHtml(l.title)}</h3>
+        <div class="flex justify-between items-center mt-3">
+          <div class="view-counter">👁 ${l.views || 0}</div>
+          <button class="text-red-500 hover:text-red-400 text-sm font-bold" onclick="deleteListing('${l.id}')">🗑 Удалить</button>
+        </div>
+      </div>
+    </div>
+  `).join('') || '<p class="text-gray-400 col-span-3 text-center">Нет объявлений. <span class="text-orange-500 cursor-pointer hover:underline" onclick="createListing()">Создать?</span></p>';
+}
+
+// ============= ОБНОВЛЕНИЕ ПРОФИЛЯ =============
+async function updateProfile(e) {
+  e.preventDefault();
+
+  const updates = {
+    game_nick: document.getElementById('editGameNick').value.trim(),
+    telegram: document.getElementById('editTelegram').value.trim() || '-',
+    vk: document.getElementById('editVk').value.trim() || '-',
+    description: document.getElementById('editDescription').value.trim()
+  };
+
+  await supabase
+    .from('rustex_profiles')
+    .update(updates)
+    .eq('user_id', currentUser.id);
+
+  currentProfile = { ...currentProfile, ...updates };
+
+  hideModal('editProfileModal');
+  loadMyProfile();
+  updateUIForAuth();
+  showToast('✅ Профиль обновлен!', 'success');
+}
+
+// ============= ЗАГРУЗКА АВАТАРА =============
+async function uploadAvatar(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    const avatarUrl = ev.target.result;
+
+    await supabase
+      .from('rustex_profiles')
+      .update({ avatar_url: avatarUrl })
+      .eq('user_id', currentUser.id);
+
+    currentProfile.avatar_url = avatarUrl;
+    loadMyProfile();
+    updateUIForAuth();
+    showToast('✅ Аватар обновлен!', 'success');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ============= СОЗДАНИЕ ОБЪЯВЛЕНИЯ =============
+async function createListing() {
+  if (!currentUser) {
+    showModal('loginModal');
+    return;
+  }
+
+  const { data: myListings } = await supabase
+    .from('rustex_listings')
+    .select('id')
+    .eq('user_id', currentUser.id);
+
+  if (myListings && myListings.length >= 3) {
+    showToast('❌ Максимум 3 объявления. Удалите старое!', 'error');
+    return;
+  }
+
+  // Автозаполнение полей из профиля
+  document.getElementById('listingNick').value = currentProfile?.game_nick || '';
+  document.getElementById('listingTelegram').value = currentProfile?.telegram || '';
+  document.getElementById('listingVk').value = currentProfile?.vk || '';
+  listingImageBase64 = '';
+  document.getElementById('listingImagePreview').style.display = 'none';
+
+  showModal('createListingModal');
+}
+
+// ============= ПРЕВЬЮ ИЗОБРАЖЕНИЯ =============
+function previewListingImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    listingImageBase64 = ev.target.result;
+    const preview = document.getElementById('listingImagePreview');
+    preview.src = listingImageBase64;
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ============= ПУБЛИКАЦИЯ ОБЪЯВЛЕНИЯ =============
+async function submitListing(e) {
+  e.preventDefault();
+
+  const listing = {
+    user_id: currentUser.id,
+    category: document.getElementById('listingCategory').value,
+    title: document.getElementById('listingTitle').value.trim(),
+    description: document.getElementById('listingDesc').value.trim(),
+    image_url: listingImageBase64 || '',
+    telegram: document.getElementById('listingTelegram').value.trim() || '-',
+    vk: document.getElementById('listingVk').value.trim() || '-',
+    game_nick: document.getElementById('listingNick').value.trim(),
+    views: 0
+  };
+
+  const { error } = await supabase.from('rustex_listings').insert(listing);
+
+  if (error) {
+    showToast('❌ Ошибка: ' + error.message, 'error');
+    return;
+  }
+
+  hideModal('createListingModal');
+  document.querySelector('#createListingModal form').reset();
+  listingImageBase64 = '';
+  loadListings();
+  showToast('✅ Объявление опубликовано!', 'success');
+}
+
+// ============= УДАЛЕНИЕ ОБЪЯВЛЕНИЯ =============
+async function deleteListing(id) {
+  if (!confirm('❓ Удалить объявление?')) return;
+
+  await supabase.from('rustex_listings').delete().eq('id', id);
+  loadMyProfile();
+  showToast('✅ Объявление удалено', 'success');
+}
+
+// ============= ЧАТЫ =============
+async function loadChats() {
+  const { data: sent } = await supabase
+    .from('rustex_messages')
+    .select('receiver_id')
+    .eq('sender_id', currentUser.id);
+
+  const { data: received } = await supabase
+    .from('rustex_messages')
+    .select('sender_id')
+    .eq('receiver_id', currentUser.id);
+
+  const userIds = new Set();
+  (sent || []).forEach(m => userIds.add(m.receiver_id));
+  (received || []).forEach(m => userIds.add(m.sender_id));
+
+  if (userIds.size === 0) {
+    document.getElementById('chatsList').innerHTML = '<p class="text-gray-500 text-sm">Нет диалогов</p>';
+    return;
+  }
+
+  const { data: profiles } = await supabase
+    .from('rustex_profiles')
+    .select('*')
+    .in('user_id', Array.from(userIds));
+
+  const { data: unread } = await supabase
+    .from('rustex_messages')
+    .select('sender_id')
+    .eq('receiver_id', currentUser.id)
+    .eq('is_read', false);
+
+  const unreadMap = {};
+  (unread || []).forEach(m => {
+    unreadMap[m.sender_id] = (unreadMap[m.sender_id] || 0) + 1;
+  });
+
+  document.getElementById('chatsList').innerHTML = (profiles || []).map(p => `
+    <div class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-white/5 transition ${currentChatUserId === p.user_id ? 'bg-white/10' : ''}" onclick="openChat('${p.user_id}')">
+      <img src="${p.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.username)}&background=cd412b&color=fff`}" class="w-10 h-10 rounded-full">
+      <div class="flex-1 min-w-0">
+        <div class="font-medium truncate">${escapeHtml(p.username)}</div>
+        <div class="text-xs text-gray-400 truncate">🎮 ${escapeHtml(p.game_nick || '-')}</div>
+      </div>
+      ${unreadMap[p.user_id] ? `<span class="bg-orange-600 text-white text-xs px-2 py-1 rounded-full">${unreadMap[p.user_id]}</span>` : ''}
+    </div>
+  `).join('');
+}
+
+async function openChat(userId) {
+  currentChatUserId = userId;
+  loadChats();
+
+  const { data: p } = await supabase
+    .from('rustex_profiles')
+    .select('*')
+    .eq('user_id', userId)
+    .single();
+
+  document.getElementById('chatHeader').style.display = 'flex';
+  document.getElementById('chatInput').style.display = 'block';
+  document.getElementById('chatEmpty').style.display = 'none';
+
+  document.getElementById('chatAvatar').src = p?.avatar_url || 'https://ui-avatars.com/api/?name=U&background=cd412b&color=fff';
+  document.getElementById('chatName').textContent = p?.username || 'Unknown';
+  document.getElementById('chatNick').textContent = '🎮 ' + (p?.game_nick || '-');
+
+  await supabase
+    .from('rustex_messages')
+    .update({ is_read: true })
+    .eq('sender_id', userId)
+    .eq('receiver_id', currentUser.id);
+
+  loadMessages();
+  checkUnreadMessages();
+}
+
+async function loadMessages() {
+  if (!currentChatUserId) return;
+
+  const { data } = await supabase
+    .from('rustex_messages')
+    .select('*')
+    .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${currentChatUserId}),and(sender_id.eq.${currentChatUserId},receiver_id.eq.${currentUser.id})`)
+    .order('created_at');
+
+  const container = document.getElementById('chatMessages');
+  container.innerHTML = (data || []).map(m => `
+    <div class="chat-message ${m.sender_id === currentUser.id ? 'sent' : 'received'}">
+      ${escapeHtml(m.content)}
+      <div class="text-xs opacity-60 mt-1">${new Date(m.created_at).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' })}</div>
+    </div>
+  `).join('');
+
+  container.scrollTop = container.scrollHeight;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('messageInput');
+  const content = input.value.trim();
+
+  if (!content || !currentChatUserId) return;
+
+  await supabase.from('rustex_messages').insert({
+    sender_id: currentUser.id,
+    receiver_id: currentChatUserId,
+    content
+  });
+
+  input.value = '';
+  loadMessages();
+}
+
+async function startChatWith(userId) {
+  if (!currentUser) {
+    showModal('loginModal');
+    return;
+  }
+
+  if (userId === currentUser.id) {
+    showToast('❌ Нельзя написать себе', 'error');
+    return;
+  }
+
+  showPage('messages');
+  setTimeout(() => openChat(userId), 100);
+}
+
+async function checkUnreadMessages() {
+  if (!currentUser) return;
+
+  const { data } = await supabase
+    .from('rustex_messages')
+    .select('id')
+    .eq('receiver_id', currentUser.id)
+    .eq('is_read', false);
+
+  const badge = document.getElementById('unreadBadge');
+  if (data && data.length > 0) {
+    badge.style.display = 'flex';
+    badge.textContent = data.length;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// ============= УТИЛИТЫ =============
+function showModal(id) {
+  hideAllModals();
+  document.getElementById(id).classList.add('show');
+}
+
+function hideModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+function hideAllModals() {
+  document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
+}
+
+function switchModal(id) {
+  hideAllModals();
+  setTimeout(() => showModal(id), 100);
+}
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function formatSocialLink(value, type) {
+  if (!value || value === '-') return null;
+
+  if (type === 'telegram') {
+    if (value.startsWith('@')) return 'https://t.me/' + value.slice(1);
+    if (value.startsWith('http')) return value;
+    if (value.startsWith('t.me/')) return 'https://' + value;
+    return 'https://t.me/' + value;
+  }
+
+  if (type === 'vk') {
+    if (value.startsWith('http')) return value;
+    if (value.startsWith('@')) return 'https://vk.com/' + value.slice(1);
+    if (value.startsWith('vk.com/')) return 'https://' + value;
+    return 'https://vk.com/' + value;
+  }
+
+  return null;
+}
+
+const telegramIcon = '<svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>';
+
+const vkIcon = '<svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.864-.525-2.05-1.727-1.033-1-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.118-5.335-3.202C4.624 10.857 4 8.57 4 8.096c0-.254.102-.491.593-.491h1.744c.44 0 .61.203.78.678.863 2.49 2.303 4.675 2.896 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.203.17-.407.44-.407h2.743c.373 0 .508.203.508.643v3.473c0 .372.17.508.271.508.22 0 .407-.136.814-.542 1.27-1.422 2.18-3.61 2.18-3.61.119-.254.322-.491.763-.491h1.744c.525 0 .644.27.525.643-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.49-.085.744-.576.744z"/></svg>';
+
+// ============= СОБЫТИЯ =============
+document.querySelectorAll('.modal').forEach(m => {
+  m.addEventListener('click', e => {
+    if (e.target === m) hideModal(m.id);
+  });
+});
+
+// Проверка непрочитанных каждые 10 секунд
+setInterval(() => {
+  if (currentUser) checkUnreadMessages();
+}, 10000);
+
+// Обновление сообщений каждые 5 секунд
+setInterval(() => {
+  if (currentChatUserId) loadMessages();
+}, 5000);
+
+// ============= СТАРТ =============
+init();
 </script>
 </body>
 </html>
+
