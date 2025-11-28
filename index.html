@@ -62,11 +62,12 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 ::-webkit-scrollbar-track{background:#0a0a0a}
 ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#3a3a3a,#2a2a2a);border-radius:5px;border:2px solid #0a0a0a}
 ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#4a4a4a,#3a3a3a)}
-.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,10,10,0.95);z-index:3000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px}
+.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,10,10,0.98);z-index:3000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px}
 .loading-spinner{width:60px;height:60px;border:4px solid #333;border-top-color:var(--rust-orange);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 .animate-pulse{animation:pulse 2s infinite}
+.error-box{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:16px;margin-bottom:16px}
 </style>
 </head>
 <body>
@@ -246,7 +247,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <div class="flex gap-3 mb-5" id="viewProfileSocials"></div>
 <p id="viewProfileDesc" class="text-gray-300 leading-relaxed"></p>
 </div>
-<button class="rust-btn" onclick="startChatWith(viewingUserId)">
+<button class="rust-btn" onclick="startChatWith(viewingUserId)" id="viewProfileChatBtn">
 <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7z"/></svg>
 Написать
 </button>
@@ -270,6 +271,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <img src="https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg" alt="RustEx" class="h-14 mx-auto mb-4">
 <h2 class="rust-font text-2xl glow-text" style="color:var(--rust-orange)">Авторизация</h2>
 </div>
+<div id="loginError" class="error-box" style="display:none"></div>
 <form onsubmit="login(event)">
 <div class="mb-5">
 <label class="block text-sm mb-2 text-gray-400 rust-font-condensed">Email</label>
@@ -279,7 +281,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <label class="block text-sm mb-2 text-gray-400 rust-font-condensed">Пароль</label>
 <input type="password" id="loginPassword" class="rust-input" required placeholder="••••••••">
 </div>
-<button type="submit" class="rust-btn w-full mb-5">Войти в аккаунт</button>
+<button type="submit" class="rust-btn w-full mb-5" id="loginBtn">Войти в аккаунт</button>
 <p class="text-center text-gray-400">Нет аккаунта? <span class="text-orange-500 cursor-pointer hover:underline font-bold" onclick="switchModal('registerModal')">Регистрация</span></p>
 </form>
 <button class="absolute top-5 right-5 text-gray-500 hover:text-white text-3xl transition-colors" onclick="hideModal('loginModal')">×</button>
@@ -291,6 +293,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <img src="https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg" alt="RustEx" class="h-14 mx-auto mb-4">
 <h2 class="rust-font text-2xl glow-text" style="color:var(--rust-orange)">Регистрация</h2>
 </div>
+<div id="registerError" class="error-box" style="display:none"></div>
 <form onsubmit="register(event)">
 <div class="mb-5">
 <label class="block text-sm mb-2 text-gray-400 rust-font-condensed">Имя пользователя</label>
@@ -308,7 +311,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <label class="block text-sm mb-2 text-gray-400 rust-font-condensed">Ник в RustEx Remake</label>
 <input type="text" id="regGameNick" class="rust-input" placeholder="Ваш ник на сервере">
 </div>
-<button type="submit" class="rust-btn w-full mb-5">Создать аккаунт</button>
+<button type="submit" class="rust-btn w-full mb-5" id="regBtn">Создать аккаунт</button>
 <p class="text-center text-gray-400">Уже есть аккаунт? <span class="text-orange-500 cursor-pointer hover:underline font-bold" onclick="switchModal('loginModal')">Войти</span></p>
 </form>
 <button class="absolute top-5 right-5 text-gray-500 hover:text-white text-3xl transition-colors" onclick="hideModal('registerModal')">×</button>
@@ -447,20 +450,42 @@ let currentChatUserId=null;
 let viewTimer=null;
 const categoryLabels={team:'🎮 Поиск в тимму',teammate:'👥 Поиск напарника',clan_search:'🏰 Ищу клан',clan_recruit:'⚔️ Набор в клан',farmer:'🌾 Фармер',pvp:'💀 ПВПшер'};
 const categoryColors={team:'bg-blue-600',teammate:'bg-green-600',clan_search:'bg-purple-600',clan_recruit:'bg-red-600',farmer:'bg-yellow-600',pvp:'bg-pink-600'};
+function safeGet(obj,path,def=''){try{return path.split('.').reduce((o,k)=>o[k],obj)||def}catch(e){return def}}
+async function initDatabase(){
+try{
+await supabase.rpc('init_rustex_tables').catch(()=>{});
+}catch(e){}
+}
 async function init(){
 try{
+await initDatabase();
+const hash=window.location.hash;
+if(hash&&hash.includes('access_token')){
+const params=new URLSearchParams(hash.substring(1));
+const accessToken=params.get('access_token');
+const refreshToken=params.get('refresh_token');
+if(accessToken&&refreshToken){
+const{data,error}=await supabase.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
+if(!error&&data.session){
+window.history.replaceState(null,'',window.location.pathname);
+currentUser=data.session.user;
+await ensureProfile();
+updateUIForAuth();
+showToast('Добро пожаловать!','success');
+}
+}
+}
 const{data:{session}}=await supabase.auth.getSession();
 if(session&&session.user){
 currentUser=session.user;
-await loadProfile();
+await ensureProfile();
 }
 updateUIForAuth();
 await loadListings();
 supabase.auth.onAuthStateChange(async(event,session)=>{
-console.log('Auth event:',event);
 if(event==='SIGNED_IN'&&session&&session.user){
 currentUser=session.user;
-await loadProfile();
+await ensureProfile();
 updateUIForAuth();
 loadListings();
 }else if(event==='SIGNED_OUT'){
@@ -472,16 +497,20 @@ loadListings();
 });
 }catch(err){
 console.error('Init error:',err);
+showToast('Ошибка инициализации','error');
 }finally{
 document.getElementById('loadingOverlay').style.display='none';
 document.getElementById('app').style.opacity='1';
 }
 }
-async function loadProfile(){
+async function ensureProfile(){
 if(!currentUser)return null;
 try{
 const{data,error}=await supabase.from('rustex_profiles').select('*').eq('user_id',currentUser.id).maybeSingle();
-if(error)throw error;
+if(error&&error.code==='PGRST116'){
+await createProfilesTable();
+return await ensureProfile();
+}
 if(data){
 currentProfile=data;
 if(data.is_new){
@@ -490,11 +519,35 @@ await supabase.from('rustex_profiles').update({is_new:false}).eq('user_id',curre
 }
 return data;
 }
-return null;
-}catch(err){
-console.error('Load profile error:',err);
-return null;
+const username=currentUser.user_metadata?.username||currentUser.email?.split('@')[0]||'User'+Date.now();
+const newProfile={user_id:currentUser.id,username:username,email:currentUser.email||'',game_nick:currentUser.user_metadata?.game_nick||'-',is_new:true,avatar_url:'',telegram:'-',vk:'-',description:''};
+const{data:created,error:createErr}=await supabase.from('rustex_profiles').insert(newProfile).select().single();
+if(createErr){
+if(createErr.code==='42P01'){
+await createProfilesTable();
+return await ensureProfile();
 }
+throw createErr;
+}
+currentProfile=created;
+setTimeout(()=>showModal('welcomeModal'),500);
+return created;
+}catch(err){
+console.error('Ensure profile error:',err);
+const fallbackProfile={username:currentUser.email?.split('@')[0]||'User',game_nick:'-',avatar_url:'',telegram:'-',vk:'-',description:'',created_at:new Date().toISOString()};
+currentProfile=fallbackProfile;
+return fallbackProfile;
+}
+}
+async function createProfilesTable(){
+try{
+await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},body:JSON.stringify({sql:`CREATE TABLE IF NOT EXISTS rustex_profiles(id UUID PRIMARY KEY DEFAULT gen_random_uuid(),user_id UUID UNIQUE NOT NULL,username TEXT NOT NULL,email TEXT DEFAULT '',avatar_url TEXT DEFAULT '',game_nick TEXT DEFAULT '-',telegram TEXT DEFAULT '-',vk TEXT DEFAULT '-',description TEXT DEFAULT '',is_new BOOLEAN DEFAULT true,created_at TIMESTAMPTZ DEFAULT NOW())`})});
+}catch(e){}
+}
+function getAvatarUrl(profile,size=128){
+if(profile&&profile.avatar_url&&profile.avatar_url.length>10)return profile.avatar_url;
+const name=encodeURIComponent(safeGet(profile,'username','U'));
+return`https://ui-avatars.com/api/?name=${name}&background=cd412b&color=fff&size=${size}`;
 }
 function updateUIForAuth(){
 const authBtns=document.getElementById('authButtons');
@@ -508,9 +561,8 @@ userMenu.style.display='flex';
 createBtn.style.display='flex';
 msgNav.style.display='flex';
 profNav.style.display='flex';
-const avatarUrl=currentProfile.avatar_url||`https://ui-avatars.com/api/?name=${encodeURIComponent(currentProfile.username)}&background=cd412b&color=fff&size=128`;
-document.getElementById('headerAvatar').src=avatarUrl;
-document.getElementById('headerUsername').textContent=currentProfile.username;
+document.getElementById('headerAvatar').src=getAvatarUrl(currentProfile);
+document.getElementById('headerUsername').textContent=safeGet(currentProfile,'username','User');
 checkUnreadMessages();
 }else{
 authBtns.style.display='block';
@@ -522,26 +574,52 @@ profNav.style.display='none';
 }
 async function register(e){
 e.preventDefault();
+const btn=document.getElementById('regBtn');
+const errBox=document.getElementById('registerError');
+btn.disabled=true;
+btn.textContent='Регистрация...';
+errBox.style.display='none';
 const username=document.getElementById('regUsername').value.trim();
 const email=document.getElementById('regEmail').value.trim();
 const password=document.getElementById('regPassword').value;
 const gameNick=document.getElementById('regGameNick').value.trim()||'-';
 try{
-const{data,error}=await supabase.auth.signUp({email,password,options:{data:{username}}});
+const{data,error}=await supabase.auth.signUp({email,password,options:{data:{username,game_nick:gameNick},emailRedirectTo:window.location.origin}});
 if(error)throw error;
 if(data.user){
-const{error:profileError}=await supabase.from('rustex_profiles').insert({user_id:data.user.id,username,email,game_nick:gameNick,is_new:true});
-if(profileError)console.error('Profile create error:',profileError);
+if(data.session){
+currentUser=data.user;
+await ensureProfile();
+updateUIForAuth();
 hideModal('registerModal');
-showToast('Аккаунт создан! Войдите в систему.','success');
-setTimeout(()=>showModal('loginModal'),1000);
+showToast('Регистрация успешна!','success');
+}else{
+const{data:loginData,error:loginErr}=await supabase.auth.signInWithPassword({email,password});
+if(loginErr)throw loginErr;
+currentUser=loginData.user;
+await ensureProfile();
+updateUIForAuth();
+hideModal('registerModal');
+showToast('Добро пожаловать, '+username+'!','success');
+}
+loadListings();
 }
 }catch(err){
+errBox.innerHTML='<span class="text-red-400">'+escapeHtml(err.message||'Ошибка регистрации')+'</span>';
+errBox.style.display='block';
 showToast(err.message||'Ошибка регистрации','error');
+}finally{
+btn.disabled=false;
+btn.textContent='Создать аккаунт';
 }
 }
 async function login(e){
 e.preventDefault();
+const btn=document.getElementById('loginBtn');
+const errBox=document.getElementById('loginError');
+btn.disabled=true;
+btn.textContent='Вход...';
+errBox.style.display='none';
 const email=document.getElementById('loginEmail').value.trim();
 const password=document.getElementById('loginPassword').value;
 try{
@@ -549,19 +627,22 @@ const{data,error}=await supabase.auth.signInWithPassword({email,password});
 if(error)throw error;
 if(data.user){
 currentUser=data.user;
-await loadProfile();
-if(!currentProfile){
-const username=email.split('@')[0];
-await supabase.from('rustex_profiles').insert({user_id:data.user.id,username,email,is_new:true});
-await loadProfile();
-}
+await ensureProfile();
 updateUIForAuth();
 hideModal('loginModal');
-showToast('Добро пожаловать, '+currentProfile.username+'!','success');
+showToast('Добро пожаловать, '+(currentProfile?.username||'User')+'!','success');
 loadListings();
 }
 }catch(err){
-showToast(err.message||'Ошибка входа','error');
+let msg=err.message||'Ошибка входа';
+if(msg.includes('Invalid login'))msg='Неверный email или пароль';
+if(msg.includes('Email not confirmed'))msg='Email не подтверждён. Проверьте почту.';
+errBox.innerHTML='<span class="text-red-400">'+escapeHtml(msg)+'</span>';
+errBox.style.display='block';
+showToast(msg,'error');
+}finally{
+btn.disabled=false;
+btn.textContent='Войти в аккаунт';
 }
 }
 async function logout(){
@@ -579,32 +660,42 @@ if(currentCategory!=='all')query=query.eq('category',currentCategory);
 const{data,error}=await query;
 const grid=document.getElementById('listingsGrid');
 const empty=document.getElementById('listingsEmpty');
-if(error||!data||data.length===0){
+if(error){
+if(error.code==='42P01'){
+grid.innerHTML='';
+empty.style.display='block';
+return;
+}
+throw error;
+}
+if(!data||data.length===0){
 grid.innerHTML='';
 empty.style.display='block';
 return;
 }
 empty.style.display='none';
 const userIds=[...new Set(data.map(l=>l.user_id))];
+let profileMap={};
+try{
 const{data:profiles}=await supabase.from('rustex_profiles').select('user_id,username,avatar_url').in('user_id',userIds);
-const profileMap={};
 (profiles||[]).forEach(p=>profileMap[p.user_id]=p);
+}catch(e){}
 grid.innerHTML=data.map(l=>{
-const profile=profileMap[l.user_id]||{};
-return `
+const profile=profileMap[l.user_id]||{username:'Unknown',avatar_url:''};
+return`
 <div class="rust-card listing-card rounded-lg overflow-hidden" onclick="viewListing('${l.id}')">
 <div class="h-44 bg-cover bg-center relative" style="background-image:url('${l.image_url||'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'}')">
 <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
 <div class="absolute bottom-4 left-4 right-4">
-<span class="category-badge ${categoryColors[l.category]} rounded">${categoryLabels[l.category]}</span>
+<span class="category-badge ${categoryColors[l.category]||'bg-gray-600'} rounded">${categoryLabels[l.category]||l.category}</span>
 </div>
 </div>
 <div class="p-5">
-<h3 class="font-bold text-lg mb-2 truncate text-white">${escapeHtml(l.title)}</h3>
-<p class="text-gray-400 text-sm mb-4 line-clamp-2">${escapeHtml(l.description.substring(0,80))}...</p>
+<h3 class="font-bold text-lg mb-2 truncate text-white">${escapeHtml(l.title||'Без названия')}</h3>
+<p class="text-gray-400 text-sm mb-4 line-clamp-2">${escapeHtml((l.description||'').substring(0,80))}...</p>
 <div class="flex items-center justify-between">
 <div class="flex items-center gap-3">
-<img src="${profile.avatar_url||`https://ui-avatars.com/api/?name=${encodeURIComponent(profile.username||'U')}&background=cd412b&color=fff`}" class="w-9 h-9 rounded-full border-2 border-zinc-600">
+<img src="${getAvatarUrl(profile,72)}" class="w-9 h-9 rounded-full border-2 border-zinc-600">
 <span class="text-sm text-gray-300 font-medium">${escapeHtml(profile.username||'Unknown')}</span>
 </div>
 <div class="view-counter">
@@ -638,9 +729,13 @@ showModal('loginModal');
 return;
 }
 try{
-const{data:l}=await supabase.from('rustex_listings').select('*').eq('id',id).single();
-if(!l)return;
-const{data:profile}=await supabase.from('rustex_profiles').select('*').eq('user_id',l.user_id).single();
+const{data:l,error}=await supabase.from('rustex_listings').select('*').eq('id',id).single();
+if(error||!l)return;
+let profile={username:'Unknown',avatar_url:'',game_nick:'-'};
+try{
+const{data:p}=await supabase.from('rustex_profiles').select('*').eq('user_id',l.user_id).single();
+if(p)profile=p;
+}catch(e){}
 showPage('viewListing');
 document.getElementById('listingDetail').innerHTML=`
 <div class="md:flex">
@@ -648,15 +743,15 @@ document.getElementById('listingDetail').innerHTML=`
 <div class="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent md:bg-gradient-to-t"></div>
 </div>
 <div class="md:w-1/2 p-8">
-<span class="category-badge ${categoryColors[l.category]} rounded inline-block mb-4">${categoryLabels[l.category]}</span>
-<h1 class="rust-font text-3xl mb-5 glow-text" style="color:var(--rust-orange)">${escapeHtml(l.title)}</h1>
-<p class="text-gray-300 mb-8 whitespace-pre-wrap leading-relaxed">${escapeHtml(l.description)}</p>
+<span class="category-badge ${categoryColors[l.category]||'bg-gray-600'} rounded inline-block mb-4">${categoryLabels[l.category]||l.category}</span>
+<h1 class="rust-font text-3xl mb-5 glow-text" style="color:var(--rust-orange)">${escapeHtml(l.title||'')}</h1>
+<p class="text-gray-300 mb-8 whitespace-pre-wrap leading-relaxed">${escapeHtml(l.description||'')}</p>
 <div class="bg-zinc-800/50 rounded-lg p-5 mb-8">
 <div class="grid grid-cols-2 gap-4 text-sm">
 <div class="flex items-center gap-2">
 <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg>
 <span class="text-gray-400">Ник:</span>
-<span class="text-white font-medium">${escapeHtml(l.game_nick)}</span>
+<span class="text-white font-medium">${escapeHtml(l.game_nick||'-')}</span>
 </div>
 <div class="flex items-center gap-2">
 <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -666,12 +761,12 @@ document.getElementById('listingDetail').innerHTML=`
 </div>
 </div>
 <div class="flex items-center gap-5 p-4 bg-zinc-800/30 rounded-lg mb-8 cursor-pointer hover:bg-zinc-800/50 transition-colors" onclick="viewProfile('${l.user_id}')">
-<img src="${profile?.avatar_url||`https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.username||'U')}&background=cd412b&color=fff`}" class="avatar">
+<img src="${getAvatarUrl(profile)}" class="avatar">
 <div class="flex-1">
-<div class="font-bold text-lg text-white">${escapeHtml(profile?.username||'Unknown')}</div>
+<div class="font-bold text-lg text-white">${escapeHtml(profile.username||'Unknown')}</div>
 <div class="text-sm text-gray-400 flex items-center gap-2">
 <svg class="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg>
-${escapeHtml(profile?.game_nick||'-')}
+${escapeHtml(profile.game_nick||'-')}
 </div>
 </div>
 <svg class="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/></svg>
@@ -699,26 +794,39 @@ console.error('View listing error:',err);
 async function viewProfile(userId){
 viewingUserId=userId;
 try{
-const{data:p}=await supabase.from('rustex_profiles').select('*').eq('user_id',userId).single();
-if(!p)return;
+let p={username:'Unknown',avatar_url:'',game_nick:'-',description:'',telegram:'-',vk:'-'};
+try{
+const{data}=await supabase.from('rustex_profiles').select('*').eq('user_id',userId).single();
+if(data)p=data;
+}catch(e){}
 showPage('viewProfile');
-document.getElementById('viewProfileAvatar').src=p.avatar_url||`https://ui-avatars.com/api/?name=${encodeURIComponent(p.username)}&background=cd412b&color=fff&size=128`;
-document.getElementById('viewProfileUsername').textContent=p.username;
+document.getElementById('viewProfileAvatar').src=getAvatarUrl(p,256);
+document.getElementById('viewProfileUsername').textContent=p.username||'Unknown';
 document.getElementById('viewProfileNick').textContent=p.game_nick||'-';
 document.getElementById('viewProfileDesc').textContent=p.description||'Пользователь пока не заполнил описание.';
+const chatBtn=document.getElementById('viewProfileChatBtn');
+if(currentUser&&currentUser.id===userId){
+chatBtn.style.display='none';
+}else{
+chatBtn.style.display='inline-flex';
+}
 let socials='';
 if(p.telegram&&p.telegram!=='-')socials+=`<a href="${p.telegram.startsWith('@')?'https://t.me/'+p.telegram.slice(1):p.telegram.startsWith('http')?p.telegram:'https://t.me/'+p.telegram}" target="_blank" class="social-btn tg-btn"><svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>`;
 if(p.vk&&p.vk!=='-')socials+=`<a href="${p.vk.startsWith('http')?p.vk:'https://vk.com/'+p.vk}" target="_blank" class="social-btn vk-btn"><svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.864-.525-2.05-1.727-1.033-1-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.118-5.335-3.202C4.624 10.857 4 8.57 4 8.096c0-.254.102-.491.593-.491h1.744c.44 0 .61.203.78.678.863 2.49 2.303 4.675 2.896 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.203.17-.407.44-.407h2.743c.373 0 .508.203.508.643v3.473c0 .372.17.508.271.508.22 0 .407-.136.814-.542 1.27-1.422 2.18-3.61 2.18-3.61.119-.254.322-.491.763-.491h1.744c.525 0 .644.27.525.643-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.49-.085.744-.576.744z"/></svg></a>`;
 document.getElementById('viewProfileSocials').innerHTML=socials;
-const{data:listings}=await supabase.from('rustex_listings').select('*').eq('user_id',userId);
-document.getElementById('userListingsGrid').innerHTML=(listings||[]).map(l=>`
+let listings=[];
+try{
+const{data}=await supabase.from('rustex_listings').select('*').eq('user_id',userId);
+if(data)listings=data;
+}catch(e){}
+document.getElementById('userListingsGrid').innerHTML=listings.map(l=>`
 <div class="rust-card listing-card rounded-lg overflow-hidden" onclick="viewListing('${l.id}')">
 <div class="h-36 bg-cover bg-center relative" style="background-image:url('${l.image_url||'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'}')">
 <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
 </div>
 <div class="p-5">
-<span class="category-badge ${categoryColors[l.category]} rounded text-xs">${categoryLabels[l.category]}</span>
-<h3 class="font-bold mt-3 text-white">${escapeHtml(l.title)}</h3>
+<span class="category-badge ${categoryColors[l.category]||'bg-gray-600'} rounded text-xs">${categoryLabels[l.category]||l.category}</span>
+<h3 class="font-bold mt-3 text-white">${escapeHtml(l.title||'')}</h3>
 <div class="view-counter mt-3">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
 ${l.views||0}
@@ -755,12 +863,15 @@ document.getElementById('viewProfilePage').style.display='block';
 window.scrollTo(0,0);
 }
 async function loadMyProfile(){
+if(!currentProfile){
+await ensureProfile();
 if(!currentProfile)return;
-document.getElementById('profileAvatar').src=currentProfile.avatar_url||`https://ui-avatars.com/api/?name=${encodeURIComponent(currentProfile.username)}&background=cd412b&color=fff&size=128`;
-document.getElementById('profileUsername').textContent=currentProfile.username;
+}
+document.getElementById('profileAvatar').src=getAvatarUrl(currentProfile,256);
+document.getElementById('profileUsername').textContent=currentProfile.username||'User';
 document.getElementById('profileNick').textContent=currentProfile.game_nick||'-';
 document.getElementById('profileDesc').textContent=currentProfile.description||'Заполните описание профиля, чтобы другие игроки узнали о вас больше.';
-document.getElementById('profileJoined').textContent=new Date(currentProfile.created_at).toLocaleDateString('ru');
+document.getElementById('profileJoined').textContent=currentProfile.created_at?new Date(currentProfile.created_at).toLocaleDateString('ru'):'—';
 let socials='';
 if(currentProfile.telegram&&currentProfile.telegram!=='-')socials+=`<a href="${currentProfile.telegram.startsWith('@')?'https://t.me/'+currentProfile.telegram.slice(1):'https://t.me/'+currentProfile.telegram}" target="_blank" class="social-btn tg-btn"><svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>`;
 if(currentProfile.vk&&currentProfile.vk!=='-')socials+=`<a href="${currentProfile.vk}" target="_blank" class="social-btn vk-btn"><svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.864-.525-2.05-1.727-1.033-1-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.118-5.335-3.202C4.624 10.857 4 8.57 4 8.096c0-.254.102-.491.593-.491h1.744c.44 0 .61.203.78.678.863 2.49 2.303 4.675 2.896 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.203.17-.407.44-.407h2.743c.373 0 .508.203.508.643v3.473c0 .372.17.508.271.508.22 0 .407-.136.814-.542 1.27-1.422 2.18-3.61 2.18-3.61.119-.254.322-.491.763-.491h1.744c.525 0 .644.27.525.643-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.49-.085.744-.576.744z"/></svg></a>`;
@@ -770,15 +881,19 @@ document.getElementById('editGameNick').value=currentProfile.game_nick||'';
 document.getElementById('editTelegram').value=currentProfile.telegram||'';
 document.getElementById('editVk').value=currentProfile.vk||'';
 document.getElementById('editDescription').value=currentProfile.description||'';
-const{data:myListings}=await supabase.from('rustex_listings').select('*').eq('user_id',currentUser.id);
-document.getElementById('myListingsGrid').innerHTML=(myListings||[]).map(l=>`
+let myListings=[];
+try{
+const{data}=await supabase.from('rustex_listings').select('*').eq('user_id',currentUser.id);
+if(data)myListings=data;
+}catch(e){}
+document.getElementById('myListingsGrid').innerHTML=myListings.map(l=>`
 <div class="rust-card listing-card rounded-lg overflow-hidden">
 <div class="h-36 bg-cover bg-center relative" style="background-image:url('${l.image_url||'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'}')">
 <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
 </div>
 <div class="p-5">
-<span class="category-badge ${categoryColors[l.category]} rounded text-xs">${categoryLabels[l.category]}</span>
-<h3 class="font-bold mt-3 text-white">${escapeHtml(l.title)}</h3>
+<span class="category-badge ${categoryColors[l.category]||'bg-gray-600'} rounded text-xs">${categoryLabels[l.category]||l.category}</span>
+<h3 class="font-bold mt-3 text-white">${escapeHtml(l.title||'')}</h3>
 <div class="flex justify-between items-center mt-4">
 <div class="view-counter">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -795,13 +910,17 @@ ${l.views||0}
 }
 async function updateProfile(e){
 e.preventDefault();
-const updates={game_nick:document.getElementById('editGameNick').value||'-',telegram:document.getElementById('editTelegram').value||'-',vk:document.getElementById('editVk').value||'-',description:document.getElementById('editDescription').value};
+const updates={game_nick:document.getElementById('editGameNick').value||'-',telegram:document.getElementById('editTelegram').value||'-',vk:document.getElementById('editVk').value||'-',description:document.getElementById('editDescription').value||''};
+try{
 await supabase.from('rustex_profiles').update(updates).eq('user_id',currentUser.id);
 currentProfile={...currentProfile,...updates};
 hideModal('editProfileModal');
 loadMyProfile();
 updateUIForAuth();
 showToast('Профиль обновлен!','success');
+}catch(err){
+showToast('Ошибка сохранения','error');
+}
 }
 async function uploadAvatar(e){
 const file=e.target.files[0];
@@ -809,61 +928,82 @@ if(!file)return;
 if(file.size>500000){showToast('Файл слишком большой (макс 500KB)','error');return}
 const reader=new FileReader();
 reader.onload=async(ev)=>{
+try{
 const avatarUrl=ev.target.result;
 await supabase.from('rustex_profiles').update({avatar_url:avatarUrl}).eq('user_id',currentUser.id);
 currentProfile.avatar_url=avatarUrl;
 loadMyProfile();
 updateUIForAuth();
 showToast('Аватар обновлен!','success');
+}catch(err){
+showToast('Ошибка загрузки','error');
+}
 };
 reader.readAsDataURL(file);
 }
 async function createListing(){
 if(!currentUser){showModal('loginModal');return}
-const{data:myListings}=await supabase.from('rustex_listings').select('id').eq('user_id',currentUser.id);
-if(myListings&&myListings.length>=3){showToast('Максимум 3 объявления. Удалите старое.','error');return}
+let myListings=[];
+try{
+const{data}=await supabase.from('rustex_listings').select('id').eq('user_id',currentUser.id);
+if(data)myListings=data;
+}catch(e){}
+if(myListings.length>=3){showToast('Максимум 3 объявления. Удалите старое.','error');return}
 document.getElementById('listingNick').value=currentProfile?.game_nick||'';
 document.getElementById('listingTelegram').value=currentProfile?.telegram||'';
 document.getElementById('listingVk').value=currentProfile?.vk||'';
-const hasListings=myListings&&myListings.length>0;
-document.getElementById('listingHint').style.display=hasListings?'none':'block';
+document.getElementById('listingHint').style.display=myListings.length>0?'none':'block';
 showModal('createListingModal');
 }
 async function submitListing(e){
 e.preventDefault();
 const listing={user_id:currentUser.id,category:document.getElementById('listingCategory').value,title:document.getElementById('listingTitle').value,description:document.getElementById('listingDesc').value,image_url:document.getElementById('listingImage').value||'',telegram:document.getElementById('listingTelegram').value||'-',vk:document.getElementById('listingVk').value||'-',game_nick:document.getElementById('listingNick').value,views:0};
+try{
 const{error}=await supabase.from('rustex_listings').insert(listing);
-if(error){showToast('Ошибка: '+error.message,'error');return}
+if(error)throw error;
 hideModal('createListingModal');
 document.querySelector('#createListingModal form').reset();
 loadListings();
 showToast('Объявление опубликовано!','success');
+}catch(err){
+showToast('Ошибка: '+err.message,'error');
+}
 }
 async function deleteListing(id){
 if(!confirm('Удалить это объявление?'))return;
+try{
 await supabase.from('rustex_listings').delete().eq('id',id);
 loadMyProfile();
 showToast('Объявление удалено','success');
+}catch(err){
+showToast('Ошибка удаления','error');
+}
 }
 async function loadChats(){
+let userIds=new Set();
+try{
 const{data:sent}=await supabase.from('rustex_messages').select('receiver_id').eq('sender_id',currentUser.id);
 const{data:received}=await supabase.from('rustex_messages').select('sender_id').eq('receiver_id',currentUser.id);
-const userIds=new Set();
 (sent||[]).forEach(m=>userIds.add(m.receiver_id));
 (received||[]).forEach(m=>userIds.add(m.sender_id));
+}catch(e){}
 if(userIds.size===0){
 document.getElementById('chatsList').innerHTML='<div class="text-center py-10 text-gray-500"><svg class="w-12 h-12 mx-auto mb-3 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7z"/></svg><p>Нет диалогов</p></div>';
 return;
 }
-const{data:profiles}=await supabase.from('rustex_profiles').select('*').in('user_id',Array.from(userIds));
+let profiles=[];
+let unreadMap={};
+try{
+const{data}=await supabase.from('rustex_profiles').select('*').in('user_id',Array.from(userIds));
+if(data)profiles=data;
 const{data:unread}=await supabase.from('rustex_messages').select('sender_id').eq('receiver_id',currentUser.id).eq('is_read',false);
-const unreadMap={};
 (unread||[]).forEach(m=>{unreadMap[m.sender_id]=(unreadMap[m.sender_id]||0)+1});
-document.getElementById('chatsList').innerHTML=(profiles||[]).map(p=>`
+}catch(e){}
+document.getElementById('chatsList').innerHTML=profiles.map(p=>`
 <div class="flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all ${currentChatUserId===p.user_id?'bg-orange-600/20 border border-orange-600/50':'hover:bg-zinc-800/50'}" onclick="openChat('${p.user_id}')">
-<img src="${p.avatar_url||`https://ui-avatars.com/api/?name=${encodeURIComponent(p.username)}&background=cd412b&color=fff`}" class="w-12 h-12 rounded-full border-2 ${currentChatUserId===p.user_id?'border-orange-500':'border-zinc-600'}">
+<img src="${getAvatarUrl(p)}" class="w-12 h-12 rounded-full border-2 ${currentChatUserId===p.user_id?'border-orange-500':'border-zinc-600'}">
 <div class="flex-1 min-w-0">
-<div class="font-bold truncate ${currentChatUserId===p.user_id?'text-orange-400':'text-white'}">${escapeHtml(p.username)}</div>
+<div class="font-bold truncate ${currentChatUserId===p.user_id?'text-orange-400':'text-white'}">${escapeHtml(p.username||'Unknown')}</div>
 <div class="text-xs text-gray-400 truncate flex items-center gap-1">
 <svg class="w-3 h-3 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg>
 ${escapeHtml(p.game_nick||'-')}
@@ -876,24 +1016,34 @@ ${unreadMap[p.user_id]?`<span class="bg-orange-600 text-white text-xs px-2 py-1 
 async function openChat(userId){
 currentChatUserId=userId;
 loadChats();
-const{data:p}=await supabase.from('rustex_profiles').select('*').eq('user_id',userId).single();
+let p={username:'Unknown',avatar_url:'',game_nick:'-'};
+try{
+const{data}=await supabase.from('rustex_profiles').select('*').eq('user_id',userId).single();
+if(data)p=data;
+}catch(e){}
 document.getElementById('chatHeader').style.display='flex';
 document.getElementById('chatInput').style.display='block';
 document.getElementById('chatEmpty').style.display='none';
-document.getElementById('chatAvatar').src=p?.avatar_url||`https://ui-avatars.com/api/?name=${encodeURIComponent(p?.username||'U')}&background=cd412b&color=fff`;
-document.getElementById('chatName').textContent=p?.username||'Unknown';
-document.getElementById('chatNick').textContent=p?.game_nick||'-';
+document.getElementById('chatAvatar').src=getAvatarUrl(p);
+document.getElementById('chatName').textContent=p.username||'Unknown';
+document.getElementById('chatNick').textContent=p.game_nick||'-';
+try{
 await supabase.from('rustex_messages').update({is_read:true}).eq('sender_id',userId).eq('receiver_id',currentUser.id);
+}catch(e){}
 loadMessages();
 checkUnreadMessages();
 }
 async function loadMessages(){
 if(!currentChatUserId)return;
+let messages=[];
+try{
 const{data}=await supabase.from('rustex_messages').select('*').or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${currentChatUserId}),and(sender_id.eq.${currentChatUserId},receiver_id.eq.${currentUser.id})`).order('created_at');
+if(data)messages=data;
+}catch(e){}
 const container=document.getElementById('chatMessages');
-container.innerHTML=(data||[]).map(m=>`
+container.innerHTML=messages.map(m=>`
 <div class="chat-message ${m.sender_id===currentUser.id?'sent':'received'}">
-<div>${escapeHtml(m.content)}</div>
+<div>${escapeHtml(m.content||'')}</div>
 <div class="text-xs opacity-60 mt-1">${new Date(m.created_at).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}</div>
 </div>
 `).join('');
@@ -903,9 +1053,13 @@ async function sendMessage(){
 const input=document.getElementById('messageInput');
 const content=input.value.trim();
 if(!content||!currentChatUserId)return;
+try{
 await supabase.from('rustex_messages').insert({sender_id:currentUser.id,receiver_id:currentChatUserId,content});
 input.value='';
 loadMessages();
+}catch(err){
+showToast('Ошибка отправки','error');
+}
 }
 async function startChatWith(userId){
 if(!currentUser){showModal('loginModal');return}
@@ -915,6 +1069,7 @@ openChat(userId);
 }
 async function checkUnreadMessages(){
 if(!currentUser)return;
+try{
 const{data}=await supabase.from('rustex_messages').select('id').eq('receiver_id',currentUser.id).eq('is_read',false);
 const badge=document.getElementById('unreadBadge');
 if(data&&data.length>0){
@@ -923,6 +1078,7 @@ badge.textContent=data.length;
 }else{
 badge.style.display='none';
 }
+}catch(e){}
 }
 function showModal(id){hideAllModals();document.getElementById(id).classList.add('show')}
 function hideModal(id){document.getElementById(id).classList.remove('show')}
@@ -934,11 +1090,11 @@ t.textContent=msg;
 t.className='toast '+type+' show';
 setTimeout(()=>t.classList.remove('show'),4000);
 }
-function escapeHtml(str){if(!str)return'';return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function escapeHtml(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 document.querySelectorAll('.modal').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)hideModal(m.id)})});
 setInterval(()=>{if(currentUser)checkUnreadMessages()},15000);
 setInterval(()=>{if(currentChatUserId)loadMessages()},5000);
 init();
 </script>
 </body>
-</html>"
+</html>
