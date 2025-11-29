@@ -30,16 +30,17 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 .rust-select:focus{outline:none;border-color:var(--rust-orange)}
 .rust-card{background:linear-gradient(180deg,#252525 0%,#1a1a1a 100%);border:2px solid #333;position:relative;box-shadow:0 10px 40px rgba(0,0,0,0.5);border-radius:8px;overflow:hidden}
 .rust-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#8b2216,#cd412b,#8b2216);z-index:10}
-.theme-orange::before{background:linear-gradient(90deg,#8b2216,#cd412b,#8b2216)}
-.theme-red::before{background:linear-gradient(90deg,#7f1d1d,#dc2626,#7f1d1d)}
-.theme-pink::before{background:linear-gradient(90deg,#831843,#ec4899,#831843)}
-.theme-purple::before{background:linear-gradient(90deg,#581c87,#a855f7,#581c87)}
-.theme-blue::before{background:linear-gradient(90deg,#1e3a8a,#3b82f6,#1e3a8a)}
-.theme-cyan::before{background:linear-gradient(90deg,#155e75,#06b6d4,#155e75)}
-.theme-green::before{background:linear-gradient(90deg,#14532d,#22c55e,#14532d)}
-.theme-yellow::before{background:linear-gradient(90deg,#713f12,#eab308,#713f12)}
-.theme-gold::before{background:linear-gradient(90deg,#78350f,#f59e0b,#78350f)}
-.theme-gray::before{background:linear-gradient(90deg,#374151,#6b7280,#374151)}
+.theme-orange{--theme-color:#cd412b;--theme-dark:#8b2216}.theme-orange::before{background:linear-gradient(90deg,#8b2216,#cd412b,#8b2216)}
+.theme-red{--theme-color:#dc2626;--theme-dark:#991b1b}.theme-red::before{background:linear-gradient(90deg,#7f1d1d,#dc2626,#7f1d1d)}
+.theme-pink{--theme-color:#ec4899;--theme-dark:#be185d}.theme-pink::before{background:linear-gradient(90deg,#831843,#ec4899,#831843)}
+.theme-purple{--theme-color:#a855f7;--theme-dark:#7c3aed}.theme-purple::before{background:linear-gradient(90deg,#581c87,#a855f7,#581c87)}
+.theme-blue{--theme-color:#3b82f6;--theme-dark:#1d4ed8}.theme-blue::before{background:linear-gradient(90deg,#1e3a8a,#3b82f6,#1e3a8a)}
+.theme-cyan{--theme-color:#06b6d4;--theme-dark:#0891b2}.theme-cyan::before{background:linear-gradient(90deg,#155e75,#06b6d4,#155e75)}
+.theme-green{--theme-color:#22c55e;--theme-dark:#16a34a}.theme-green::before{background:linear-gradient(90deg,#14532d,#22c55e,#14532d)}
+.theme-yellow{--theme-color:#eab308;--theme-dark:#ca8a04}.theme-yellow::before{background:linear-gradient(90deg,#713f12,#eab308,#713f12)}
+.theme-gold{--theme-color:#f59e0b;--theme-dark:#d97706}.theme-gold::before{background:linear-gradient(90deg,#78350f,#f59e0b,#78350f)}
+.theme-gray{--theme-color:#6b7280;--theme-dark:#4b5563}.theme-gray::before{background:linear-gradient(90deg,#374151,#6b7280,#374151)}
+.listing-card .category-badge{background:var(--theme-color,#cd412b)!important}
 .metal-header{background:linear-gradient(180deg,#1a1a1a 0%,#0f0f0f 100%);border-bottom:3px solid #333;box-shadow:0 4px 20px rgba(0,0,0,0.5);position:relative}
 .metal-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--rust-orange),transparent)}
 .nav-link{padding:16px 20px;cursor:pointer;transition:all 0.2s;border-bottom:3px solid transparent;text-transform:uppercase;letter-spacing:1px;font-size:12px;font-family:'Roboto Condensed',sans-serif;font-weight:700;color:#888;position:relative;display:flex;align-items:center;gap:8px}
@@ -48,7 +49,8 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 .listing-card{transition:all 0.3s;cursor:pointer}
 .listing-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,0.6),0 0 30px rgba(205,65,43,0.15)}
 .listing-card.frozen{opacity:0.6;filter:grayscale(0.5)}
-.category-badge{font-size:10px;padding:5px 10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;font-family:'Roboto Condensed',sans-serif;border-radius:4px}
+.category-badge{font-size:10px;padding:5px 10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;font-family:'Roboto Condensed',sans-serif;border-radius:4px;color:#fff}
+.server-badge{background:#333;font-size:9px;padding:3px 8px;border-radius:3px;color:#fff}
 .admin-badge{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-weight:700;padding:4px 12px;border-radius:4px;font-size:11px;text-transform:uppercase;letter-spacing:1px;box-shadow:0 0 20px rgba(245,158,11,0.5)}
 .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
 .modal.show{display:flex}
@@ -88,13 +90,18 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 .file-upload input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .online-dot{width:10px;height:10px;background:#22c55e;border-radius:50%;border:2px solid #1a1a1a}
 .dropdown{position:relative;display:inline-block}
-.dropdown-menu{position:absolute;top:100%;right:0;background:#1a1a1a;border:1px solid #333;border-radius:8px;min-width:200px;z-index:100;display:none;box-shadow:0 10px 40px rgba(0,0,0,0.5)}
+.dropdown-menu{position:absolute;top:100%;left:0;background:#1a1a1a;border:1px solid #333;border-radius:8px;min-width:220px;z-index:100;display:none;box-shadow:0 10px 40px rgba(0,0,0,0.5);max-height:400px;overflow-y:auto}
 .dropdown-menu.show{display:block}
-.dropdown-item{padding:12px 16px;cursor:pointer;transition:background 0.2s;font-size:14px}
+.dropdown-item{padding:12px 16px;cursor:pointer;transition:background 0.2s;font-size:14px;display:flex;align-items:center;gap:8px}
 .dropdown-item:hover{background:#2a2a2a}
+.dropdown-item.active{background:rgba(205,65,43,0.2);color:var(--rust-orange)}
+.dropdown-divider{height:1px;background:#333;margin:8px 0}
+.dropdown-header{padding:8px 16px;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:1px}
 .back-btn{display:inline-flex;align-items:center;gap:8px;color:#888;cursor:pointer;transition:color 0.2s;margin-bottom:24px;font-size:14px}
 .back-btn:hover{color:var(--rust-orange)}
 .frozen-banner{background:linear-gradient(135deg,#1e40af,#1d4ed8);padding:16px;border-radius:8px;margin-bottom:16px}
+.date-badge{font-size:10px;color:#666;display:flex;align-items:center;gap:4px}
+.blocked-banner{background:linear-gradient(135deg,#7f1d1d,#991b1b);padding:12px;border-radius:8px;text-center}
 </style>
 </head>
 <body>
@@ -157,15 +164,36 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 <div class="flex gap-3">
 <div class="dropdown">
-<button class="rust-btn rust-btn-secondary rust-btn-sm" onclick="toggleDropdown('sortDropdown')">
-<svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3z"/></svg>
-Сортировка
+<button class="rust-btn rust-btn-secondary rust-btn-sm" onclick="toggleDropdown('filterDropdown')">
+<svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"/></svg>
+Фильтр
 </button>
-<div class="dropdown-menu" id="sortDropdown">
-<div class="dropdown-item" onclick="setSorting('new')">Сначала новые</div>
-<div class="dropdown-item" onclick="setSorting('old')">Сначала старые</div>
-<div class="dropdown-item" onclick="setSorting('likes_desc')">По лайкам ↓</div>
-<div class="dropdown-item" onclick="setSorting('likes_asc')">По лайкам ↑</div>
+<div class="dropdown-menu" id="filterDropdown">
+<div class="dropdown-header">Категория</div>
+<div class="dropdown-item active" data-cat="all" onclick="setFilter('category','all')">Все категории</div>
+<div class="dropdown-item" data-cat="team" onclick="setFilter('category','team')">В тимму</div>
+<div class="dropdown-item" data-cat="teammate" onclick="setFilter('category','teammate')">Напарника</div>
+<div class="dropdown-item" data-cat="clan_search" onclick="setFilter('category','clan_search')">Ищу клан</div>
+<div class="dropdown-item" data-cat="clan_recruit" onclick="setFilter('category','clan_recruit')">Набор в клан</div>
+<div class="dropdown-item" data-cat="farmer" onclick="setFilter('category','farmer')">Фармер</div>
+<div class="dropdown-item" data-cat="pvp" onclick="setFilter('category','pvp')">ПВПшер</div>
+<div class="dropdown-item" data-cat="killer" onclick="setFilter('category','killer')">Киллер</div>
+<div class="dropdown-item" data-cat="trade" onclick="setFilter('category','trade')">Обмен</div>
+<div class="dropdown-divider"></div>
+<div class="dropdown-header">Сервер</div>
+<div class="dropdown-item active" data-srv="all" onclick="setFilter('server','all')">Все сервера</div>
+<div class="dropdown-item" data-srv="1" onclick="setFilter('server','1')">#1</div>
+<div class="dropdown-item" data-srv="2" onclick="setFilter('server','2')">#2</div>
+<div class="dropdown-item" data-srv="3" onclick="setFilter('server','3')">#3</div>
+<div class="dropdown-item" data-srv="4" onclick="setFilter('server','4')">#4</div>
+<div class="dropdown-item" data-srv="5" onclick="setFilter('server','5')">#5</div>
+<div class="dropdown-item" data-srv="6" onclick="setFilter('server','6')">#6</div>
+<div class="dropdown-divider"></div>
+<div class="dropdown-header">Сортировка</div>
+<div class="dropdown-item active" data-sort="new" onclick="setFilter('sort','new')">Сначала новые</div>
+<div class="dropdown-item" data-sort="old" onclick="setFilter('sort','old')">Сначала старые</div>
+<div class="dropdown-item" data-sort="likes_desc" onclick="setFilter('sort','likes_desc')">По лайкам ↓</div>
+<div class="dropdown-item" data-sort="likes_asc" onclick="setFilter('sort','likes_asc')">По лайкам ↑</div>
 </div>
 </div>
 <button class="rust-btn rust-btn-sm" onclick="createListing()" id="createListingBtn" style="display:none">
@@ -174,24 +202,16 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </button>
 </div>
 </div>
-<div class="flex flex-wrap gap-2 mb-6">
-<button class="category-filter px-4 py-2 rounded text-sm bg-orange-600 text-white" data-category="all" onclick="filterCategory('all')">Все</button>
-<button class="category-filter px-4 py-2 rounded text-sm bg-zinc-800 text-gray-300" data-category="team" onclick="filterCategory('team')">В тимму</button>
-<button class="category-filter px-4 py-2 rounded text-sm bg-zinc-800 text-gray-300" data-category="teammate" onclick="filterCategory('teammate')">Напарника</button>
-<button class="category-filter px-4 py-2 rounded text-sm bg-zinc-800 text-gray-300" data-category="clan_search" onclick="filterCategory('clan_search')">Ищу клан</button>
-<button class="category-filter px-4 py-2 rounded text-sm bg-zinc-800 text-gray-300" data-category="clan_recruit" onclick="filterCategory('clan_recruit')">Набор в клан</button>
-<button class="category-filter px-4 py-2 rounded text-sm bg-zinc-800 text-gray-300" data-category="farmer" onclick="filterCategory('farmer')">Фармер</button>
-<button class="category-filter px-4 py-2 rounded text-sm bg-zinc-800 text-gray-300" data-category="pvp" onclick="filterCategory('pvp')">ПВПшер</button>
-</div>
+<div id="activeFilters" class="flex flex-wrap gap-2 mb-4"></div>
 <div id="listingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 <div id="listingsEmpty" class="text-center py-20" style="display:none">
 <svg class="w-20 h-20 mx-auto mb-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/></svg>
-<h3 class="rust-font text-xl mb-2 text-gray-400">Объявлений пока нет</h3>
-<p class="text-gray-500">Будь первым!</p>
+<h3 class="rust-font text-xl mb-2 text-gray-400">Объявлений не найдено</h3>
+<p class="text-gray-500">Попробуй другие фильтры</p>
 </div>
 <div id="listingsLoading" class="text-center py-20">
 <div class="loading-spinner mx-auto mb-4"></div>
-<p class="text-gray-400">Загрузка...</p>
+<p class="text-gray-400">Загрузка объявлений...</p>
 </div>
 </div>
 <div id="messagesPage" style="display:none">
@@ -212,8 +232,12 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <div id="chatName" class="font-bold"></div>
 <div id="chatNick" class="text-xs text-gray-400"></div>
 </div>
+<button class="rust-btn rust-btn-secondary rust-btn-sm" onclick="toggleBlockUser()" id="blockUserBtn">Заблокировать</button>
 </div>
 <div id="chatMessages" class="flex-1 p-4 overflow-y-auto"></div>
+<div id="chatBlocked" class="p-4 text-center" style="display:none">
+<div class="blocked-banner">Пользователь заблокирован</div>
+</div>
 <div id="chatInput" class="p-4 border-t border-zinc-700" style="display:none">
 <div class="flex gap-2">
 <input type="text" id="messageInput" class="rust-input flex-1" placeholder="Сообщение..." onkeypress="if(event.key==='Enter')sendMessage()">
@@ -238,8 +262,12 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 <div class="flex justify-between items-center mb-6">
 <h1 class="rust-font text-3xl glow-text section-title" style="color:var(--rust-orange)">Уведомления</h1>
+<div class="flex gap-2">
+<button class="rust-btn rust-btn-secondary rust-btn-sm" onclick="toggleNotifications()" id="toggleNotifBtn">Вкл/Выкл</button>
 <button class="rust-btn rust-btn-secondary rust-btn-sm" onclick="markAllNotificationsRead()">Прочитать все</button>
 </div>
+</div>
+<div id="notifStatus" class="mb-4 text-sm text-gray-400"></div>
 <div id="notificationsList" class="space-y-3"></div>
 <div id="notificationsEmpty" class="text-center py-20 text-gray-500" style="display:none">
 <svg class="w-16 h-16 mx-auto mb-3 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/></svg>
@@ -449,10 +477,24 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <option value="clan_recruit">Набор в клан</option>
 <option value="farmer">Фармер</option>
 <option value="pvp">ПВПшер</option>
+<option value="killer">Ищу киллера</option>
+<option value="trade">Обмен</option>
 </select>
 </div>
 <div>
-<label class="block text-sm mb-2 text-gray-400">Тема</label>
+<label class="block text-sm mb-2 text-gray-400">Сервер</label>
+<select id="listingServer" class="rust-select" required>
+<option value="1">#1</option>
+<option value="2">#2</option>
+<option value="3">#3</option>
+<option value="4">#4</option>
+<option value="5">#5</option>
+<option value="6">#6</option>
+</select>
+</div>
+</div>
+<div class="mb-4">
+<label class="block text-sm mb-2 text-gray-400">Тема оформления</label>
 <select id="listingTheme" class="rust-select">
 <option value="orange">Оранжевая</option>
 <option value="red">Красная</option>
@@ -466,10 +508,9 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <option value="gray">Серая</option>
 </select>
 </div>
-</div>
 <div class="mb-4">
-<label class="block text-sm mb-2 text-gray-400">Название (до 20 символов)</label>
-<input type="text" id="listingTitle" class="rust-input" required maxlength="20" placeholder="Краткое название">
+<label class="block text-sm mb-2 text-gray-400">Название (до 25 символов)</label>
+<input type="text" id="listingTitle" class="rust-input" required maxlength="25" placeholder="Краткое название">
 </div>
 <div class="mb-4">
 <label class="block text-sm mb-2 text-gray-400">Описание (до 1000 символов)</label>
@@ -479,7 +520,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <label class="block text-sm mb-2 text-gray-400">Фото (необязательно)</label>
 <div class="file-upload" id="listingImageUpload">
 <svg class="w-10 h-10 text-gray-500 mb-2" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg>
-<span class="text-gray-400 text-sm">Нажми для выбора</span>
+<span class="text-gray-400 text-sm">Нажми или перетащи</span>
 <input type="file" accept="image/*" onchange="previewListingImage(event)">
 </div>
 <input type="hidden" id="listingImage">
@@ -487,11 +528,11 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <div class="grid grid-cols-2 gap-4 mb-4">
 <div>
 <label class="block text-sm mb-2 text-gray-400">Telegram</label>
-<input type="text" id="listingTelegram" class="rust-input" placeholder="@username">
+<input type="text" id="listingTelegram" class="rust-input" placeholder="@username или -">
 </div>
 <div>
 <label class="block text-sm mb-2 text-gray-400">VK</label>
-<input type="text" id="listingVk" class="rust-input" placeholder="@id или ссылка">
+<input type="text" id="listingVk" class="rust-input" placeholder="@username или -">
 </div>
 </div>
 <div class="mb-6">
@@ -518,9 +559,23 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <option value="clan_recruit">Набор в клан</option>
 <option value="farmer">Фармер</option>
 <option value="pvp">ПВПшер</option>
+<option value="killer">Ищу киллера</option>
+<option value="trade">Обмен</option>
 </select>
 </div>
 <div>
+<label class="block text-sm mb-2 text-gray-400">Сервер</label>
+<select id="editListingServer" class="rust-select" required>
+<option value="1">#1</option>
+<option value="2">#2</option>
+<option value="3">#3</option>
+<option value="4">#4</option>
+<option value="5">#5</option>
+<option value="6">#6</option>
+</select>
+</div>
+</div>
+<div class="mb-4">
 <label class="block text-sm mb-2 text-gray-400">Тема</label>
 <select id="editListingTheme" class="rust-select">
 <option value="orange">Оранжевая</option>
@@ -535,10 +590,9 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <option value="gray">Серая</option>
 </select>
 </div>
-</div>
 <div class="mb-4">
 <label class="block text-sm mb-2 text-gray-400">Название</label>
-<input type="text" id="editListingTitle" class="rust-input" required maxlength="20">
+<input type="text" id="editListingTitle" class="rust-input" required maxlength="25">
 </div>
 <div class="mb-4">
 <label class="block text-sm mb-2 text-gray-400">Описание</label>
@@ -568,10 +622,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <h2 class="rust-font text-xl text-center mb-6 glow-text" style="color:var(--rust-orange)">Управление объявлением</h2>
 <input type="hidden" id="adminListingId">
 <div class="space-y-3">
-<button class="rust-btn w-full" onclick="adminFreezeListing()">
-<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M5 8a1 1 0 011-1h1V6a1 1 0 012 0v1h2V6a1 1 0 112 0v1h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H6a1 1 0 110-2h1v-2H6a1 1 0 01-1-1z"/></svg>
-Заморозить
-</button>
+<button class="rust-btn w-full" onclick="adminFreezeListing()">Заморозить</button>
 <button class="rust-btn w-full" onclick="adminUnfreezeListing()">Разморозить</button>
 <button class="rust-btn rust-btn-secondary w-full" onclick="adminEditListing()">Редактировать</button>
 <button class="rust-btn w-full" style="background:linear-gradient(180deg,#dc2626,#991b1b,#7f1d1d)" onclick="adminDeleteListing()">Удалить</button>
@@ -593,34 +644,25 @@ const BANNED_WORDS=['discord.gg','t.me/joinchat','bit.ly','реклама','пр
 const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null;
 let currentProfile=null;
-let currentCategory='all';
-let currentSorting='new';
+let currentFilters={category:'all',server:'all',sort:'new'};
 let viewingUserId=null;
 let currentChatUserId=null;
 let currentListingId=null;
+let blockedUsers=[];
+let notificationsEnabled=true;
 let userIP='';
-const categoryLabels={team:'В тимму',teammate:'Напарник',clan_search:'Ищу клан',clan_recruit:'Набор в клан',farmer:'Фармер',pvp:'ПВПшер'};
-const categoryColors={team:'bg-blue-600',teammate:'bg-green-600',clan_search:'bg-purple-600',clan_recruit:'bg-red-600',farmer:'bg-yellow-600',pvp:'bg-pink-600'};
-async function getIP(){
-try{
-const r=await fetch('https://api.ipify.org?format=json');
-const d=await r.json();
-userIP=d.ip||'';
-}catch(e){userIP='unknown'}
-}
+const categoryLabels={team:'В тимму',teammate:'Напарник',clan_search:'Ищу клан',clan_recruit:'Набор в клан',farmer:'Фармер',pvp:'ПВПшер',killer:'Киллер',trade:'Обмен'};
+async function getIP(){try{const r=await fetch('https://api.ipify.org?format=json');const d=await r.json();userIP=d.ip||'';}catch(e){userIP='unknown';}}
 async function checkIPLimit(){
-if(!userIP)return{canRegister:true,canLogin:true};
+if(!userIP)return{canRegister:true};
 try{
 const{data}=await supabase.from('rustex_ip_limits').select('*').eq('ip_address',userIP);
-const count=data?data.length:0;
-return{canRegister:count<3,canLogin:true,count};
-}catch(e){return{canRegister:true,canLogin:true}}
+return{canRegister:!data||data.length<3,count:data?data.length:0};
+}catch(e){return{canRegister:true};}
 }
 async function registerIP(userId){
 if(!userIP)return;
-try{
-await supabase.from('rustex_ip_limits').insert({ip_address:userIP,user_id:userId});
-}catch(e){}
+try{await supabase.from('rustex_ip_limits').insert({ip_address:userIP,user_id:userId});}catch(e){}
 }
 function containsBannedWords(text){
 const lower=text.toLowerCase();
@@ -635,25 +677,43 @@ if(profile&&profile.avatar_url&&profile.avatar_url.length>10)return profile.avat
 const name=encodeURIComponent((profile?.username||'U').substring(0,2));
 return`https://ui-avatars.com/api/?name=${name}&background=cd412b&color=fff&size=${size}&bold=true`;
 }
+function formatDate(dateStr){
+const d=new Date(dateStr);
+return d.toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'});
+}
 function showToast(msg,type='success'){
 const t=document.getElementById('toast');
 t.textContent=msg;
 t.className='toast '+type+' show';
 setTimeout(()=>t.classList.remove('show'),4000);
 }
-function showModal(id){hideAllModals();document.getElementById(id).classList.add('show')}
-function hideModal(id){document.getElementById(id).classList.remove('show')}
-function hideAllModals(){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'))}
-function switchModal(id){hideAllModals();setTimeout(()=>showModal(id),100)}
+function showModal(id){hideAllModals();document.getElementById(id).classList.add('show');}
+function hideModal(id){document.getElementById(id).classList.remove('show');}
+function hideAllModals(){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));}
+function switchModal(id){hideAllModals();setTimeout(()=>showModal(id),100);}
 function toggleDropdown(id){
-const d=document.getElementById(id);
-d.classList.toggle('show');
+document.querySelectorAll('.dropdown-menu').forEach(d=>{if(d.id!==id)d.classList.remove('show');});
+document.getElementById(id).classList.toggle('show');
 }
 document.addEventListener('click',e=>{
-if(!e.target.closest('.dropdown')){
-document.querySelectorAll('.dropdown-menu').forEach(d=>d.classList.remove('show'));
-}
+if(!e.target.closest('.dropdown'))document.querySelectorAll('.dropdown-menu').forEach(d=>d.classList.remove('show'));
 });
+function setFilter(type,value){
+currentFilters[type]=value;
+document.querySelectorAll(`[data-${type.substring(0,3)}]`).forEach(el=>{
+el.classList.remove('active');
+if(el.dataset[type.substring(0,3)]===value||el.dataset[type]===value)el.classList.add('active');
+});
+updateActiveFiltersDisplay();
+loadListings();
+}
+function updateActiveFiltersDisplay(){
+const container=document.getElementById('activeFilters');
+let html='';
+if(currentFilters.category!=='all')html+=`<span class="px-3 py-1 bg-orange-600/20 text-orange-400 rounded text-sm">${categoryLabels[currentFilters.category]||currentFilters.category} <span class="cursor-pointer ml-1" onclick="setFilter('category','all')">×</span></span>`;
+if(currentFilters.server!=='all')html+=`<span class="px-3 py-1 bg-blue-600/20 text-blue-400 rounded text-sm">Сервер #${currentFilters.server} <span class="cursor-pointer ml-1" onclick="setFilter('server','all')">×</span></span>`;
+container.innerHTML=html;
+}
 async function init(){
 await getIP();
 try{
@@ -691,7 +751,7 @@ updateUIForAuth();
 loadListings();
 }
 });
-}catch(e){console.log(e)}
+}catch(e){console.log(e);}
 finally{
 document.getElementById('loadingOverlay').style.display='none';
 document.getElementById('app').style.opacity='1';
@@ -703,6 +763,8 @@ try{
 const{data,error}=await supabase.from('rustex_profiles').select('*').eq('user_id',currentUser.id).maybeSingle();
 if(data){
 currentProfile=data;
+blockedUsers=data.blocked_users||[];
+notificationsEnabled=data.notifications_enabled!==false;
 if(data.is_new){
 setTimeout(()=>showModal('welcomeModal'),500);
 await supabase.from('rustex_profiles').update({is_new:false}).eq('user_id',currentUser.id);
@@ -711,9 +773,13 @@ return data;
 }
 const username=currentUser.user_metadata?.username||currentUser.email?.split('@')[0]||'User'+Date.now();
 const isAdmin=currentUser.email===ADMIN_EMAIL;
-const newProfile={user_id:currentUser.id,username,email:currentUser.email||'',game_nick:username,is_admin:isAdmin,is_new:true};
-const{data:created}=await supabase.from('rustex_profiles').insert(newProfile).select().single();
-if(created){currentProfile=created;setTimeout(()=>showModal('welcomeModal'),500);return created;}
+const newProfile={user_id:currentUser.id,username,email:currentUser.email||'',game_nick:username,is_admin:isAdmin,is_new:true,notifications_enabled:true,blocked_users:[]};
+const{data:created,error:createErr}=await supabase.from('rustex_profiles').insert(newProfile).select().single();
+if(created){
+currentProfile=created;
+setTimeout(()=>showModal('welcomeModal'),500);
+return created;
+}
 currentProfile={...newProfile,created_at:new Date().toISOString()};
 return currentProfile;
 }catch(e){
@@ -751,7 +817,7 @@ async function checkUsernameAvailable(username){
 try{
 const{data}=await supabase.from('rustex_profiles').select('id').eq('username',username).maybeSingle();
 return!data;
-}catch(e){return true}
+}catch(e){return true;}
 }
 async function register(e){
 e.preventDefault();
@@ -763,7 +829,7 @@ const email=document.getElementById('regEmail').value.trim();
 const password=document.getElementById('regPassword').value;
 if(username.length<3){errBox.textContent='Имя минимум 3 символа';errBox.style.display='block';btn.disabled=false;btn.textContent='Создать аккаунт';return;}
 const ipCheck=await checkIPLimit();
-if(!ipCheck.canRegister){errBox.textContent='Лимит аккаунтов исчерпан (макс. 3)';errBox.style.display='block';btn.disabled=false;btn.textContent='Создать аккаунт';return;}
+if(!ipCheck.canRegister){errBox.textContent='Лимит аккаунтов исчерпан (макс. 3 на IP)';errBox.style.display='block';btn.disabled=false;btn.textContent='Создать аккаунт';return;}
 const available=await checkUsernameAvailable(username);
 if(!available){errBox.textContent='Это имя уже занято';errBox.style.display='block';btn.disabled=false;btn.textContent='Создать аккаунт';return;}
 try{
@@ -793,7 +859,7 @@ loadListings();
 let msg=err.message||'Ошибка регистрации';
 if(msg.includes('already registered'))msg='Email уже зарегистрирован';
 errBox.textContent=msg;errBox.style.display='block';
-}finally{btn.disabled=false;btn.textContent='Создать аккаунт'}
+}finally{btn.disabled=false;btn.textContent='Создать аккаунт';}
 }
 async function login(e){
 e.preventDefault();
@@ -810,14 +876,14 @@ currentUser=data.user;
 await loadOrCreateProfile();
 updateUIForAuth();
 hideModal('loginModal');
-showToast('Добро пожаловать!','success');
+showToast('С возвращением!','success');
 loadListings();
 }
 }catch(err){
 let msg=err.message||'Ошибка входа';
 if(msg.includes('Invalid login'))msg='Неверный email или пароль';
 errBox.textContent=msg;errBox.style.display='block';
-}finally{btn.disabled=false;btn.textContent='Войти'}
+}finally{btn.disabled=false;btn.textContent='Войти';}
 }
 async function logout(){
 await supabase.auth.signOut();
@@ -832,22 +898,21 @@ l.classList.remove('active');
 if(l.dataset.page===page)l.classList.add('active');
 });
 ['listingsPage','messagesPage','notificationsPage','profilePage','viewListingPage','viewProfilePage'].forEach(p=>{
-const el=document.getElementById(p);
-if(el)el.style.display='none';
+document.getElementById(p).style.display='none';
 });
 if(page==='listings'){
 document.getElementById('listingsPage').style.display='block';
 loadListings();
 }else if(page==='messages'){
-if(!currentUser){showModal('loginModal');return}
+if(!currentUser){showModal('loginModal');return;}
 document.getElementById('messagesPage').style.display='block';
 loadChats();
 }else if(page==='notifications'){
-if(!currentUser){showModal('loginModal');return}
+if(!currentUser){showModal('loginModal');return;}
 document.getElementById('notificationsPage').style.display='block';
 loadNotifications();
 }else if(page==='profile'){
-if(!currentUser){showModal('loginModal');return}
+if(!currentUser){showModal('loginModal');return;}
 document.getElementById('profilePage').style.display='block';
 loadMyProfile();
 }else if(page==='viewListing'){
@@ -864,14 +929,15 @@ const loading=document.getElementById('listingsLoading');
 loading.style.display='block';grid.innerHTML='';empty.style.display='none';
 try{
 let query=supabase.from('rustex_listings').select('*');
-if(currentCategory!=='all')query=query.eq('category',currentCategory);
-if(currentSorting==='new')query=query.order('created_at',{ascending:false});
-else if(currentSorting==='old')query=query.order('created_at',{ascending:true});
-else if(currentSorting==='likes_desc')query=query.order('likes_count',{ascending:false});
-else if(currentSorting==='likes_asc')query=query.order('likes_count',{ascending:true});
+if(currentFilters.category!=='all')query=query.eq('category',currentFilters.category);
+if(currentFilters.server!=='all')query=query.eq('server',currentFilters.server);
+if(currentFilters.sort==='new')query=query.order('created_at',{ascending:false});
+else if(currentFilters.sort==='old')query=query.order('created_at',{ascending:true});
+else if(currentFilters.sort==='likes_desc')query=query.order('likes_count',{ascending:false});
+else if(currentFilters.sort==='likes_asc')query=query.order('likes_count',{ascending:true});
 const{data,error}=await query;
 loading.style.display='none';
-if(error||!data||data.length===0){empty.style.display='block';return}
+if(error||!data||data.length===0){empty.style.display='block';return;}
 const userIds=[...new Set(data.map(l=>l.user_id))];
 let profileMap={};
 try{
@@ -894,56 +960,41 @@ return`
 <div class="rust-card listing-card theme-${theme} ${l.is_frozen?'frozen':''}" onclick="viewListing('${l.id}')">
 <div class="h-40 bg-cover bg-center relative" style="background-image:url('${imgUrl}')">
 <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+<div class="absolute top-3 right-3"><span class="server-badge">#${l.server||'1'}</span></div>
 <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end">
-<span class="category-badge ${categoryColors[l.category]||'bg-gray-600'}">${categoryLabels[l.category]||l.category}</span>
-${l.is_frozen?'<span class="category-badge bg-blue-600">Заморожено</span>':''}
+<span class="category-badge">${categoryLabels[l.category]||l.category}</span>
+${l.is_frozen?'<span class="category-badge" style="background:#1d4ed8">Заморожено</span>':''}
 </div>
 </div>
 <div class="p-4">
-<h3 class="font-bold text-lg mb-2 truncate text-white">${escapeHtml(l.title||'')}</h3>
+<h3 class="font-bold text-lg mb-1 truncate text-white">${escapeHtml(l.title||'')}</h3>
+<div class="date-badge mb-2"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/></svg>${formatDate(l.created_at)}</div>
 <p class="text-gray-400 text-sm mb-3 line-clamp-2">${escapeHtml((l.description||'').substring(0,80))}${(l.description||'').length>80?'...':''}</p>
 <div class="flex items-center justify-between">
-<div class="flex items-center gap-2">
+<div class="flex items-center gap-2 cursor-pointer" onclick="event.stopPropagation();viewProfile('${l.user_id}')">
 <img src="${getAvatarUrl(profile,64)}" class="w-8 h-8 rounded-full border-2 border-zinc-600">
 <span class="text-sm text-gray-300">${escapeHtml(profile.username||'Игрок')}</span>
 ${profile.is_admin?'<span class="admin-badge text-xs py-0.5 px-2">ADM</span>':''}
 </div>
 <div class="like-btn ${isLiked?'liked':''}" onclick="event.stopPropagation();toggleLike('${l.id}')">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg>
-${l.likes_count||0}
+<span>${l.likes_count||0}</span>
 </div>
 </div>
 </div>
 </div>`;
 }).join('');
 }catch(err){
-console.log(err);
 loading.style.display='none';
 empty.style.display='block';
 }
 }
-function filterCategory(cat){
-currentCategory=cat;
-document.querySelectorAll('.category-filter').forEach(b=>{
-b.classList.remove('bg-orange-600','text-white');
-b.classList.add('bg-zinc-800','text-gray-300');
-if(b.dataset.category===cat){
-b.classList.add('bg-orange-600','text-white');
-b.classList.remove('bg-zinc-800','text-gray-300');
-}
-});
-loadListings();
-}
-function setSorting(sort){
-currentSorting=sort;
-document.getElementById('sortDropdown').classList.remove('show');
-loadListings();
-}
 async function toggleLike(listingId){
-if(!currentUser){showModal('loginModal');return}
+if(!currentUser){showModal('loginModal');return;}
 try{
 const{data:listing}=await supabase.from('rustex_listings').select('user_id,likes_count').eq('id',listingId).single();
-if(listing.user_id===currentUser.id){showToast('Нельзя лайкать своё объявление','error');return}
+if(!listing)return;
+if(listing.user_id===currentUser.id){showToast('Нельзя лайкать своё объявление','error');return;}
 const{data:existing}=await supabase.from('rustex_likes').select('id').eq('user_id',currentUser.id).eq('listing_id',listingId).maybeSingle();
 if(existing){
 await supabase.from('rustex_likes').delete().eq('id',existing.id);
@@ -951,6 +1002,7 @@ await supabase.from('rustex_listings').update({likes_count:Math.max(0,(listing.l
 }else{
 await supabase.from('rustex_likes').insert({user_id:currentUser.id,listing_id:listingId});
 await supabase.from('rustex_listings').update({likes_count:(listing.likes_count||0)+1}).eq('id',listingId);
+if(notificationsEnabled){
 await supabase.from('rustex_notifications').insert({
 user_id:listing.user_id,
 type:'like',
@@ -959,15 +1011,16 @@ message:`${currentProfile?.username||'Кто-то'} оценил ваше объ
 link:listingId
 });
 }
+}
 loadListings();
-}catch(e){console.log(e)}
+}catch(e){console.log(e);}
 }
 async function viewListing(id){
-if(!currentUser){showToast('Войдите для просмотра','error');showModal('loginModal');return}
+if(!currentUser){showToast('Войдите для просмотра','error');showModal('loginModal');return;}
 currentListingId=id;
 try{
 const{data:l}=await supabase.from('rustex_listings').select('*').eq('id',id).single();
-if(!l){showToast('Объявление не найдено','error');return}
+if(!l){showToast('Объявление не найдено','error');return;}
 let profile={username:'Игрок',avatar_url:'',game_nick:'-',is_admin:false};
 try{const{data:p}=await supabase.from('rustex_profiles').select('*').eq('user_id',l.user_id).maybeSingle();if(p)profile=p;}catch(e){}
 const{data:existing}=await supabase.from('rustex_likes').select('id').eq('user_id',currentUser.id).eq('listing_id',id).maybeSingle();
@@ -977,15 +1030,18 @@ const isAdmin=currentProfile?.is_admin;
 showPage('viewListing');
 const imgUrl=l.image_url||DEFAULT_IMAGE;
 const theme=l.theme||'orange';
+document.getElementById('listingDetail').className=`rust-card theme-${theme}`;
 document.getElementById('listingDetail').innerHTML=`
-${l.is_frozen?`<div class="frozen-banner"><b>Объявление заморожено</b><br><span class="text-sm opacity-80">${escapeHtml(l.frozen_reason||'Нарушение правил')}</span></div>`:''}
+${l.is_frozen?`<div class="frozen-banner m-4"><b>Объявление заморожено</b><br><span class="text-sm opacity-80">${escapeHtml(l.frozen_reason||'Нарушение правил')}</span></div>`:''}
 <div class="md:flex">
 <div class="md:w-1/2 h-64 md:h-auto bg-cover bg-center relative" style="background-image:url('${imgUrl}');min-height:280px">
 <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+<div class="absolute top-4 right-4"><span class="server-badge text-sm">#${l.server||'1'}</span></div>
 </div>
 <div class="md:w-1/2 p-6">
-<span class="category-badge ${categoryColors[l.category]||'bg-gray-600'} inline-block mb-3">${categoryLabels[l.category]||l.category}</span>
-<h1 class="rust-font text-2xl mb-4 glow-text" style="color:var(--rust-orange)">${escapeHtml(l.title||'')}</h1>
+<span class="category-badge inline-block mb-3">${categoryLabels[l.category]||l.category}</span>
+<h1 class="rust-font text-2xl mb-2 glow-text" style="color:var(--theme-color,var(--rust-orange))">${escapeHtml(l.title||'')}</h1>
+<div class="date-badge mb-4"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/></svg>${formatDate(l.created_at)}</div>
 <p class="text-gray-300 mb-6 whitespace-pre-wrap text-sm">${escapeHtml(l.description||'')}</p>
 <div class="bg-zinc-800/50 rounded p-4 mb-6">
 <div class="flex items-center gap-2 text-sm">
@@ -1006,7 +1062,7 @@ ${renderSocialBtn(l.telegram,'tg')}
 ${renderSocialBtn(l.vk,'vk')}
 <div class="like-btn ${isLiked?'liked':''}" onclick="toggleLike('${l.id}')">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg>
-${l.likes_count||0}
+<span>${l.likes_count||0}</span>
 </div>
 ${!isOwner?`<button class="rust-btn flex-1" onclick="startChatWith('${l.user_id}')">Написать</button>`:''}
 </div>
@@ -1014,7 +1070,7 @@ ${isOwner?`<div class="flex gap-2"><button class="rust-btn rust-btn-secondary fl
 ${isAdmin&&!isOwner?`<button class="rust-btn w-full mt-2" onclick="showAdminListingModal('${l.id}')">Админ-панель</button>`:''}
 </div>
 </div>`;
-}catch(err){console.log(err);showToast('Ошибка загрузки','error')}
+}catch(err){console.log(err);showToast('Ошибка загрузки','error');}
 }
 function renderSocialBtn(value,type){
 if(!value||value==='-')return'';
@@ -1050,9 +1106,9 @@ socials+=renderSocialBtn(p.telegram,'tg');
 socials+=renderSocialBtn(p.vk,'vk');
 document.getElementById('viewProfileSocials').innerHTML=socials;
 let listings=[];
-try{const{data}=await supabase.from('rustex_listings').select('*').eq('user_id',userId);if(data)listings=data;}catch(e){}
+try{const{data}=await supabase.from('rustex_listings').select('*').eq('user_id',userId).order('created_at',{ascending:false});if(data)listings=data;}catch(e){}
 document.getElementById('userListingsGrid').innerHTML=listings.length?listings.map(l=>renderListingCard(l,p)).join(''):'<p class="text-gray-500 col-span-3 text-center py-10">Нет объявлений</p>';
-}catch(err){console.log(err)}
+}catch(err){console.log(err);}
 }
 function renderListingCard(l,profile){
 const imgUrl=l.image_url||DEFAULT_IMAGE;
@@ -1061,13 +1117,15 @@ return`
 <div class="rust-card listing-card theme-${theme}" onclick="viewListing('${l.id}')">
 <div class="h-32 bg-cover bg-center relative" style="background-image:url('${imgUrl}')">
 <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+<div class="absolute top-2 right-2"><span class="server-badge">#${l.server||'1'}</span></div>
 </div>
 <div class="p-4">
-<span class="category-badge ${categoryColors[l.category]||'bg-gray-600'} text-xs">${categoryLabels[l.category]||l.category}</span>
+<span class="category-badge text-xs">${categoryLabels[l.category]||l.category}</span>
 <h3 class="font-bold mt-2 text-white">${escapeHtml(l.title||'')}</h3>
+<div class="date-badge mt-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/></svg>${formatDate(l.created_at)}</div>
 <div class="like-btn mt-2 inline-flex" onclick="event.stopPropagation();toggleLike('${l.id}')">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg>
-${l.likes_count||0}
+<span>${l.likes_count||0}</span>
 </div>
 </div>
 </div>`;
@@ -1099,17 +1157,18 @@ document.getElementById('adminListingsCount').textContent=listingsCount||0;
 }catch(e){}
 }
 let myListings=[];
-try{const{data}=await supabase.from('rustex_listings').select('*').eq('user_id',currentUser.id);if(data)myListings=data;}catch(e){}
+try{const{data}=await supabase.from('rustex_listings').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});if(data)myListings=data;}catch(e){}
 document.getElementById('myListingsGrid').innerHTML=myListings.length?myListings.map(l=>`
 <div class="rust-card listing-card theme-${l.theme||'orange'}">
 <div class="h-32 bg-cover bg-center relative" style="background-image:url('${l.image_url||DEFAULT_IMAGE}')">
 <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+<div class="absolute top-2 right-2"><span class="server-badge">#${l.server||'1'}</span></div>
 </div>
 <div class="p-4">
-<span class="category-badge ${categoryColors[l.category]||'bg-gray-600'} text-xs">${categoryLabels[l.category]||l.category}</span>
+<span class="category-badge text-xs">${categoryLabels[l.category]||l.category}</span>
 <h3 class="font-bold mt-2 text-white">${escapeHtml(l.title||'')}</h3>
 <div class="flex justify-between items-center mt-3">
-<div class="like-btn inline-flex text-sm"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg>${l.likes_count||0}</div>
+<div class="like-btn inline-flex text-sm"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg><span>${l.likes_count||0}</span></div>
 <div class="flex gap-2">
 <button class="text-blue-400 hover:text-blue-300 text-xs" onclick="event.stopPropagation();editMyListing('${l.id}')">Изменить</button>
 <button class="text-red-400 hover:text-red-300 text-xs" onclick="event.stopPropagation();deleteListing('${l.id}')">Удалить</button>
@@ -1117,7 +1176,7 @@ document.getElementById('myListingsGrid').innerHTML=myListings.length?myListings
 </div>
 </div>
 </div>
-`).join(''):'<div class="col-span-3 text-center py-12"><p class="text-gray-500">У вас нет объявлений</p><button class="rust-btn mt-4" onclick="createListing()">Создать</button></div>';
+`).join(''):'<div class="col-span-3 text-center py-12"><p class="text-gray-500">У вас нет объявлений</p><button class="rust-btn mt-4" onclick="createListing()">Создать первое</button></div>';
 }
 async function updateProfile(e){
 e.preventDefault();
@@ -1128,37 +1187,35 @@ vk:document.getElementById('editVk').value.trim()||'-',
 description:document.getElementById('editDescription').value.trim()||''
 };
 try{
-const{error}=await supabase.from('rustex_profiles').update(updates).eq('user_id',currentUser.id);
-if(error)throw error;
+await supabase.from('rustex_profiles').update(updates).eq('user_id',currentUser.id);
 currentProfile={...currentProfile,...updates};
 hideModal('editProfileModal');
 loadMyProfile();
 updateUIForAuth();
 showToast('Сохранено!','success');
-}catch(err){showToast('Ошибка сохранения','error')}
+}catch(err){showToast('Ошибка сохранения','error');}
 }
 async function uploadAvatar(e){
 const file=e.target.files[0];
 if(!file)return;
-if(file.size>500000){showToast('Макс. размер 500KB','error');return}
+if(file.size>500000){showToast('Макс. размер 500KB','error');return;}
 const reader=new FileReader();
 reader.onload=async(ev)=>{
 try{
 const avatarUrl=ev.target.result;
-const{error}=await supabase.from('rustex_profiles').update({avatar_url:avatarUrl}).eq('user_id',currentUser.id);
-if(error)throw error;
+await supabase.from('rustex_profiles').update({avatar_url:avatarUrl}).eq('user_id',currentUser.id);
 currentProfile.avatar_url=avatarUrl;
 loadMyProfile();
 updateUIForAuth();
 showToast('Аватар обновлён!','success');
-}catch(err){showToast('Ошибка загрузки','error')}
+}catch(err){showToast('Ошибка загрузки','error');}
 };
 reader.readAsDataURL(file);
 }
 function previewListingImage(e){
 const file=e.target.files[0];
 if(!file)return;
-if(file.size>1000000){showToast('Макс. размер 1MB','error');return}
+if(file.size>1000000){showToast('Макс. размер 1MB','error');return;}
 const reader=new FileReader();
 reader.onload=(ev)=>{
 document.getElementById('listingImage').value=ev.target.result;
@@ -1168,15 +1225,15 @@ upload.innerHTML=`<img src="${ev.target.result}" class="max-h-32 rounded"><span 
 reader.readAsDataURL(file);
 }
 async function createListing(){
-if(!currentUser){showModal('loginModal');return}
+if(!currentUser){showModal('loginModal');return;}
 let myListings=[];
 try{const{data}=await supabase.from('rustex_listings').select('id').eq('user_id',currentUser.id);if(data)myListings=data;}catch(e){}
-if(myListings.length>=3){showToast('Макс. 3 объявления','error');return}
+if(myListings.length>=3){showToast('Макс. 3 объявления','error');return;}
 document.getElementById('listingNick').value=currentProfile?.game_nick||currentProfile?.username||'';
 document.getElementById('listingTelegram').value=currentProfile?.telegram||'';
 document.getElementById('listingVk').value=currentProfile?.vk||'';
 document.getElementById('listingImage').value='';
-document.getElementById('listingImageUpload').innerHTML=`<svg class="w-10 h-10 text-gray-500 mb-2" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg><span class="text-gray-400 text-sm">Нажми для выбора</span><input type="file" accept="image/*" onchange="previewListingImage(event)">`;
+document.getElementById('listingImageUpload').innerHTML=`<svg class="w-10 h-10 text-gray-500 mb-2" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg><span class="text-gray-400 text-sm">Нажми или перетащи</span><input type="file" accept="image/*" onchange="previewListingImage(event)">`;
 showModal('createListingModal');
 }
 async function submitListing(e){
@@ -1193,6 +1250,7 @@ return;
 const listing={
 user_id:currentUser.id,
 category:document.getElementById('listingCategory').value,
+server:document.getElementById('listingServer').value,
 theme:document.getElementById('listingTheme').value,
 title,
 description:desc,
@@ -1202,14 +1260,13 @@ vk:document.getElementById('listingVk').value.trim()||'-',
 game_nick:document.getElementById('listingNick').value.trim()
 };
 try{
-const{error}=await supabase.from('rustex_listings').insert(listing);
-if(error)throw error;
+await supabase.from('rustex_listings').insert(listing);
 hideModal('createListingModal');
 document.querySelector('#createListingModal form').reset();
 loadListings();
 showToast('Опубликовано!','success');
-}catch(err){showToast('Ошибка публикации','error')}
-finally{btn.disabled=false;btn.textContent='Опубликовать'}
+}catch(err){showToast('Ошибка публикации','error');}
+finally{btn.disabled=false;btn.textContent='Опубликовать';}
 }
 async function editMyListing(id){
 try{
@@ -1217,6 +1274,7 @@ const{data:l}=await supabase.from('rustex_listings').select('*').eq('id',id).sin
 if(!l)return;
 document.getElementById('editListingId').value=id;
 document.getElementById('editListingCategory').value=l.category;
+document.getElementById('editListingServer').value=l.server||'1';
 document.getElementById('editListingTheme').value=l.theme||'orange';
 document.getElementById('editListingTitle').value=l.title;
 document.getElementById('editListingDesc').value=l.description;
@@ -1224,16 +1282,17 @@ document.getElementById('editListingTelegram').value=l.telegram;
 document.getElementById('editListingVk').value=l.vk;
 document.getElementById('editListingNick').value=l.game_nick;
 showModal('editListingModal');
-}catch(e){showToast('Ошибка','error')}
+}catch(e){showToast('Ошибка','error');}
 }
 async function updateListing(e){
 e.preventDefault();
 const id=document.getElementById('editListingId').value;
 const title=document.getElementById('editListingTitle').value.trim();
 const desc=document.getElementById('editListingDesc').value.trim();
-if(containsBannedWords(title)||containsBannedWords(desc)){showToast('Запрещённый контент','error');return}
+if(containsBannedWords(title)||containsBannedWords(desc)){showToast('Запрещённый контент','error');return;}
 const updates={
 category:document.getElementById('editListingCategory').value,
+server:document.getElementById('editListingServer').value,
 theme:document.getElementById('editListingTheme').value,
 title,
 description:desc,
@@ -1247,16 +1306,15 @@ hideModal('editListingModal');
 showToast('Сохранено!','success');
 loadListings();
 if(currentListingId===id)viewListing(id);
-}catch(e){showToast('Ошибка','error')}
+}catch(e){showToast('Ошибка','error');}
 }
 async function deleteListing(id){
 if(!confirm('Удалить объявление?'))return;
 try{
 await supabase.from('rustex_listings').delete().eq('id',id);
 showToast('Удалено','success');
-showPage('profile');
-loadMyProfile();
-}catch(err){showToast('Ошибка','error')}
+showPage('listings');
+}catch(err){showToast('Ошибка','error');}
 }
 function showAdminListingModal(id){
 document.getElementById('adminListingId').value=id;
@@ -1272,7 +1330,7 @@ await supabase.from('rustex_notifications').insert({user_id:l.user_id,type:'free
 hideModal('adminListingModal');
 showToast('Заморожено','success');
 viewListing(id);
-}catch(e){showToast('Ошибка','error')}
+}catch(e){showToast('Ошибка','error');}
 }
 async function adminUnfreezeListing(){
 const id=document.getElementById('adminListingId').value;
@@ -1281,7 +1339,7 @@ await supabase.from('rustex_listings').update({is_frozen:false,frozen_reason:''}
 hideModal('adminListingModal');
 showToast('Разморожено','success');
 viewListing(id);
-}catch(e){showToast('Ошибка','error')}
+}catch(e){showToast('Ошибка','error');}
 }
 async function adminEditListing(){
 const id=document.getElementById('adminListingId').value;
@@ -1298,21 +1356,21 @@ await supabase.from('rustex_notifications').insert({user_id:l.user_id,type:'dele
 hideModal('adminListingModal');
 showToast('Удалено','success');
 showPage('listings');
-}catch(e){showToast('Ошибка','error')}
+}catch(e){showToast('Ошибка','error');}
 }
 async function adminDeleteUser(){
 const input=document.getElementById('adminDeleteUser').value.trim();
-if(!input){showToast('Введите ник или email','error');return}
+if(!input){showToast('Введите ник или email','error');return;}
 if(!confirm('Удалить пользователя '+input+'?'))return;
 try{
 const{data:p}=await supabase.from('rustex_profiles').select('user_id').or(`username.eq.${input},email.eq.${input}`).maybeSingle();
-if(!p){showToast('Пользователь не найден','error');return}
+if(!p){showToast('Пользователь не найден','error');return;}
 await supabase.from('rustex_listings').delete().eq('user_id',p.user_id);
 await supabase.from('rustex_profiles').delete().eq('user_id',p.user_id);
 showToast('Пользователь удалён','success');
 document.getElementById('adminDeleteUser').value='';
 loadMyProfile();
-}catch(e){showToast('Ошибка','error')}
+}catch(e){showToast('Ошибка','error');}
 }
 async function loadChats(){
 let userIds=new Set();
@@ -1332,7 +1390,7 @@ try{
 const{data}=await supabase.from('rustex_profiles').select('*').in('user_id',Array.from(userIds));
 if(data)profiles=data;
 const{data:unread}=await supabase.from('rustex_messages').select('sender_id').eq('receiver_id',currentUser.id).eq('is_read',false);
-(unread||[]).forEach(m=>{unreadMap[m.sender_id]=(unreadMap[m.sender_id]||0)+1});
+(unread||[]).forEach(m=>{unreadMap[m.sender_id]=(unreadMap[m.sender_id]||0)+1;});
 }catch(e){}
 document.getElementById('chatsList').innerHTML=profiles.map(p=>`
 <div class="flex items-center gap-3 p-3 rounded cursor-pointer transition-all ${currentChatUserId===p.user_id?'bg-orange-600/20':'hover:bg-zinc-800/50'}" onclick="openChat('${p.user_id}')">
@@ -1350,12 +1408,20 @@ currentChatUserId=userId;
 loadChats();
 let p={username:'Игрок',avatar_url:'',game_nick:'-'};
 try{const{data}=await supabase.from('rustex_profiles').select('*').eq('user_id',userId).maybeSingle();if(data)p=data;}catch(e){}
+const isBlocked=blockedUsers.includes(userId);
 document.getElementById('chatHeader').style.display='flex';
-document.getElementById('chatInput').style.display='block';
 document.getElementById('chatEmpty').style.display='none';
 document.getElementById('chatAvatar').src=getAvatarUrl(p);
 document.getElementById('chatName').textContent=p.username||'Игрок';
 document.getElementById('chatNick').textContent=p.game_nick||'-';
+document.getElementById('blockUserBtn').textContent=isBlocked?'Разблокировать':'Заблокировать';
+if(isBlocked){
+document.getElementById('chatInput').style.display='none';
+document.getElementById('chatBlocked').style.display='block';
+}else{
+document.getElementById('chatInput').style.display='block';
+document.getElementById('chatBlocked').style.display='none';
+}
 try{await supabase.from('rustex_messages').update({is_read:true}).eq('sender_id',userId).eq('receiver_id',currentUser.id);}catch(e){}
 loadMessages();
 checkUnreadMessages();
@@ -1380,18 +1446,34 @@ async function sendMessage(){
 const input=document.getElementById('messageInput');
 const content=input.value.trim();
 if(!content||!currentChatUserId)return;
-if(containsBannedWords(content)){showToast('Запрещённый контент','error');return}
+if(blockedUsers.includes(currentChatUserId)){showToast('Пользователь заблокирован','error');return;}
+if(containsBannedWords(content)){showToast('Запрещённый контент','error');return;}
 try{
 await supabase.from('rustex_messages').insert({sender_id:currentUser.id,receiver_id:currentChatUserId,content});
 input.value='';
 loadMessages();
-}catch(err){showToast('Ошибка','error')}
+}catch(err){showToast('Ошибка','error');}
 }
 async function startChatWith(userId){
-if(!currentUser){showModal('loginModal');return}
-if(userId===currentUser.id){showToast('Нельзя написать себе','error');return}
+if(!currentUser){showModal('loginModal');return;}
+if(userId===currentUser.id){showToast('Нельзя написать себе','error');return;}
 showPage('messages');
 setTimeout(()=>openChat(userId),100);
+}
+async function toggleBlockUser(){
+if(!currentChatUserId)return;
+const isBlocked=blockedUsers.includes(currentChatUserId);
+if(isBlocked){
+blockedUsers=blockedUsers.filter(id=>id!==currentChatUserId);
+}else{
+blockedUsers.push(currentChatUserId);
+}
+try{
+await supabase.from('rustex_profiles').update({blocked_users:blockedUsers}).eq('user_id',currentUser.id);
+currentProfile.blocked_users=blockedUsers;
+openChat(currentChatUserId);
+showToast(isBlocked?'Разблокирован':'Заблокирован','success');
+}catch(e){showToast('Ошибка','error');}
 }
 async function checkUnreadMessages(){
 if(!currentUser)return;
@@ -1399,10 +1481,12 @@ try{
 const{data}=await supabase.from('rustex_messages').select('id').eq('receiver_id',currentUser.id).eq('is_read',false);
 const badge=document.getElementById('unreadBadge');
 if(data&&data.length>0){badge.style.display='flex';badge.textContent=data.length;}
-else{badge.style.display='none'}
+else{badge.style.display='none';}
 }catch(e){}
 }
 async function loadNotifications(){
+document.getElementById('notifStatus').textContent=notificationsEnabled?'Уведомления включены':'Уведомления отключены';
+document.getElementById('toggleNotifBtn').textContent=notificationsEnabled?'Отключить':'Включить';
 try{
 const{data}=await supabase.from('rustex_notifications').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(50);
 if(!data||data.length===0){
@@ -1424,15 +1508,24 @@ ${n.type==='like'?'<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
 ${n.link&&n.type==='like'?`<button class="rust-btn rust-btn-sm rust-btn-secondary" onclick="viewListing('${n.link}')">Открыть</button>`:''}
 </div>
 `).join('');
-}catch(e){console.log(e)}
+}catch(e){}
+}
+async function toggleNotifications(){
+notificationsEnabled=!notificationsEnabled;
+try{
+await supabase.from('rustex_profiles').update({notifications_enabled:notificationsEnabled}).eq('user_id',currentUser.id);
+currentProfile.notifications_enabled=notificationsEnabled;
+loadNotifications();
+showToast(notificationsEnabled?'Уведомления включены':'Уведомления отключены','success');
+}catch(e){showToast('Ошибка','error');}
 }
 async function checkUnreadNotifications(){
 if(!currentUser)return;
 try{
 const{data}=await supabase.from('rustex_notifications').select('id').eq('user_id',currentUser.id).eq('is_read',false);
 const dot=document.getElementById('notificationDot');
-if(data&&data.length>0){dot.style.display='block'}
-else{dot.style.display='none'}
+if(data&&data.length>0){dot.style.display='block';}
+else{dot.style.display='none';}
 }catch(e){}
 }
 async function markAllNotificationsRead(){
@@ -1444,10 +1537,10 @@ showToast('Все прочитано','success');
 }catch(e){}
 }
 document.querySelectorAll('.modal').forEach(m=>{
-m.addEventListener('click',e=>{if(e.target===m)hideModal(m.id)});
+m.addEventListener('click',e=>{if(e.target===m)hideModal(m.id);});
 });
-setInterval(()=>{if(currentUser){checkUnreadMessages();checkUnreadNotifications()}},15000);
-setInterval(()=>{if(currentChatUserId)loadMessages()},5000);
+setInterval(()=>{if(currentUser){checkUnreadMessages();checkUnreadNotifications();}},10000);
+setInterval(()=>{if(currentChatUserId)loadMessages();},3000);
 init();
 </script>
 </body>
