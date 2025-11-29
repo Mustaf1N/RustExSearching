@@ -114,7 +114,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <header class="sticky top-0 z-50 metal-header">
 <div class="max-w-7xl mx-auto px-4">
 <div class="flex items-center justify-between h-16">
-<div class="flex items-center gap-3 cursor-pointer" data-nav="listings">
+<div class="flex items-center gap-3 cursor-pointer" onclick="navigate('listings')">
 <img src="https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg" alt="RustEx" class="h-10">
 <div class="hidden sm:block">
 <span class="rust-font text-xl glow-text" style="color:var(--rust-orange)">RustEx</span>
@@ -122,30 +122,30 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 </div>
 <nav class="flex items-center h-full" id="mainNav">
-<div class="nav-link active" data-nav="listings" data-page="listings">
+<div class="nav-link active" data-nav="listings">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
 <span class="hidden md:inline">Объявления</span>
 </div>
-<div class="nav-link" data-nav="messages" data-page="messages" id="messagesNav" style="display:none">
+<div class="nav-link" data-nav="messages" id="messagesNav" style="display:none">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7z"/></svg>
 <span class="hidden md:inline">Сообщения</span>
 <span class="unread-badge" id="unreadBadge" style="display:none">0</span>
 </div>
-<div class="nav-link relative" data-nav="notifications" data-page="notifications" id="notificationsNav" style="display:none">
+<div class="nav-link relative" data-nav="notifications" id="notificationsNav" style="display:none">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
 <span class="hidden md:inline">Уведомления</span>
 <div class="notification-dot" id="notificationDot" style="display:none"></div>
 </div>
-<div class="nav-link" data-nav="profile" data-page="profile" id="profileNav" style="display:none">
+<div class="nav-link" data-nav="myprofile" id="profileNav" style="display:none">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
 <span class="hidden md:inline">Профиль</span>
 </div>
 </nav>
 <div class="flex items-center gap-3">
 <div id="authButtons">
-<button class="rust-btn rust-btn-sm" data-modal="loginModal">Войти</button>
+<button class="rust-btn rust-btn-sm" onclick="showModal('loginModal')">Войти</button>
 </div>
-<div id="userMenu" style="display:none" class="flex items-center gap-3 cursor-pointer" data-nav="profile">
+<div id="userMenu" style="display:none" class="flex items-center gap-3 cursor-pointer" data-nav="myprofile">
 <div class="relative">
 <img id="headerAvatar" src="" class="w-10 h-10 rounded-full border-2 border-orange-600">
 <div class="online-dot absolute bottom-0 right-0"></div>
@@ -164,7 +164,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 <div class="flex gap-3">
 <div class="dropdown">
-<button class="rust-btn rust-btn-secondary rust-btn-sm" data-dropdown="filterDropdown">
+<button class="rust-btn rust-btn-secondary rust-btn-sm" id="filterBtn">
 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"/></svg>
 Фильтр
 </button>
@@ -196,7 +196,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <div class="dropdown-item" data-filter="sort" data-value="likes_asc">По лайкам ↑</div>
 </div>
 </div>
-<button class="rust-btn rust-btn-sm" id="createListingBtn" style="display:none">
+<button class="rust-btn rust-btn-sm" id="createListingBtn" style="display:none" onclick="createListing()">
 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"/></svg>
 Создать
 </button>
@@ -215,7 +215,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 </div>
 <div id="messagesPage" style="display:none">
-<div class="back-btn" data-nav="listings">
+<div class="back-btn" onclick="navigate('listings')">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"/></svg>
 На главную
 </div>
@@ -236,7 +236,10 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 <div id="chatMessages" class="flex-1 p-4 overflow-y-auto"></div>
 <div id="chatBlocked" class="p-4 text-center" style="display:none">
-<div class="blocked-banner">Пользователь заблокирован</div>
+<div class="blocked-banner">Вы заблокировали этого пользователя</div>
+</div>
+<div id="chatBlockedByUser" class="p-4 text-center" style="display:none">
+<div class="blocked-banner">Этот пользователь заблокировал вас</div>
 </div>
 <div id="chatInput" class="p-4 border-t border-zinc-700" style="display:none">
 <div class="flex gap-2">
@@ -256,7 +259,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 </div>
 <div id="notificationsPage" style="display:none">
-<div class="back-btn" data-nav="listings">
+<div class="back-btn" onclick="navigate('listings')">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"/></svg>
 На главную
 </div>
@@ -275,7 +278,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 </div>
 <div id="profilePage" style="display:none">
-<div class="back-btn" data-nav="listings">
+<div class="back-btn" onclick="navigate('listings')">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"/></svg>
 На главную
 </div>
@@ -283,7 +286,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <div class="flex flex-col md:flex-row gap-6 items-start">
 <div class="relative">
 <img id="profileAvatar" src="" class="avatar avatar-lg">
-<label class="absolute bottom-1 right-1 w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-orange-500">
+<label class="absolute bottom-1 right-1 w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-orange-500" id="avatarLabel">
 <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z"/></svg>
 <input type="file" accept="image/*" class="hidden" id="avatarInput">
 </label>
@@ -306,8 +309,8 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <div class="flex gap-2 mb-4" id="profileSocials"></div>
 <p id="profileDesc" class="text-gray-300 text-sm"></p>
 </div>
-<div class="flex flex-col gap-2">
-<button class="rust-btn rust-btn-sm" data-modal="editProfileModal">Редактировать</button>
+<div class="flex flex-col gap-2" id="profileActions">
+<button class="rust-btn rust-btn-sm" onclick="showModal('editProfileModal')">Редактировать</button>
 <button class="rust-btn rust-btn-secondary rust-btn-sm" id="logoutBtn">Выйти</button>
 </div>
 </div>
@@ -335,14 +338,14 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <div id="myListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 </div>
 <div id="viewListingPage" style="display:none">
-<div class="back-btn" data-nav="listings">
+<div class="back-btn" onclick="navigate('listings')">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"/></svg>
 Назад
 </div>
 <div id="listingDetail" class="rust-card"></div>
 </div>
 <div id="viewProfilePage" style="display:none">
-<div class="back-btn" data-nav="listings">
+<div class="back-btn" onclick="navigate('listings')">
 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"/></svg>
 Назад
 </div>
@@ -363,7 +366,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <div class="flex gap-2 mb-4" id="viewProfileSocials"></div>
 <p id="viewProfileDesc" class="text-gray-300 text-sm"></p>
 </div>
-<button class="rust-btn" id="viewProfileChatBtn">Написать</button>
+<div id="viewProfileActions"></div>
 </div>
 </div>
 <h3 class="rust-font text-xl mb-4 section-title" style="color:var(--rust-orange)">Объявления</h3>
@@ -385,9 +388,9 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <input type="password" id="loginPassword" class="rust-input" required placeholder="Ваш пароль">
 </div>
 <button type="submit" class="rust-btn w-full mb-4" id="loginBtn">Войти</button>
-<p class="text-center text-gray-400 text-sm">Нет аккаунта? <span class="text-orange-500 cursor-pointer hover:underline" data-switch="registerModal">Регистрация</span></p>
+<p class="text-center text-gray-400 text-sm">Нет аккаунта? <span class="text-orange-500 cursor-pointer hover:underline" onclick="hideModal('loginModal');showModal('registerModal')">Регистрация</span></p>
 </form>
-<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" data-close>&times;</button>
+<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" onclick="hideModal('loginModal')">&times;</button>
 </div>
 </div>
 <div id="registerModal" class="modal">
@@ -409,9 +412,9 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <input type="password" id="regPassword" class="rust-input" required minlength="6" placeholder="Минимум 6 символов">
 </div>
 <button type="submit" class="rust-btn w-full mb-4" id="regBtn">Создать аккаунт</button>
-<p class="text-center text-gray-400 text-sm">Уже есть аккаунт? <span class="text-orange-500 cursor-pointer hover:underline" data-switch="loginModal">Войти</span></p>
+<p class="text-center text-gray-400 text-sm">Уже есть аккаунт? <span class="text-orange-500 cursor-pointer hover:underline" onclick="hideModal('registerModal');showModal('loginModal')">Войти</span></p>
 </form>
-<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" data-close>&times;</button>
+<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" onclick="hideModal('registerModal')">&times;</button>
 </div>
 </div>
 <div id="welcomeModal" class="modal">
@@ -434,7 +437,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <div><b class="text-white">Общение</b><br><span class="text-gray-400">Пиши другим игрокам прямо на сайте</span></div>
 </div>
 </div>
-<button class="rust-btn w-full" id="welcomeBtn">Заполнить профиль</button>
+<button class="rust-btn w-full" onclick="hideModal('welcomeModal');navigate('user/'+currentUser.id)">Заполнить профиль</button>
 </div>
 </div>
 <div id="editProfileModal" class="modal">
@@ -459,7 +462,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 <button type="submit" class="rust-btn w-full">Сохранить</button>
 </form>
-<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" data-close>&times;</button>
+<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" onclick="hideModal('editProfileModal')">&times;</button>
 </div>
 </div>
 <div id="createListingModal" class="modal">
@@ -541,7 +544,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 <button type="submit" class="rust-btn w-full" id="submitListingBtn">Опубликовать</button>
 </form>
-<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" data-close>&times;</button>
+<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" onclick="hideModal('createListingModal')">&times;</button>
 </div>
 </div>
 <div id="editListingModal" class="modal">
@@ -614,7 +617,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 </div>
 <button type="submit" class="rust-btn w-full">Сохранить</button>
 </form>
-<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" data-close>&times;</button>
+<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" onclick="hideModal('editListingModal')">&times;</button>
 </div>
 </div>
 <div id="adminListingModal" class="modal">
@@ -631,7 +634,7 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:l
 <label class="block text-sm mb-2 text-gray-400">Причина заморозки</label>
 <input type="text" id="adminFreezeReason" class="rust-input" placeholder="Укажите причину">
 </div>
-<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" data-close>&times;</button>
+<button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" onclick="hideModal('adminListingModal')">&times;</button>
 </div>
 </div>
 <div id="toast" class="toast"></div>
@@ -659,35 +662,70 @@ function getAvatarUrl(profile,size=128){if(profile&&profile.avatar_url&&profile.
 function formatDate(dateStr){const d=new Date(dateStr);return d.toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'});}
 function containsBannedWords(text){const lower=text.toLowerCase();return BANNED_WORDS.some(w=>lower.includes(w));}
 function showToast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';setTimeout(()=>t.classList.remove('show'),4000);}
-function showModal(id){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));document.getElementById(id).classList.add('show');}
-function hideModal(id){document.getElementById(id).classList.remove('show');}
-function hideAllModals(){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));}
-function navigate(page,param=null){
-let hash='#'+page;
-if(param)hash+='/'+param;
-if(window.location.hash!==hash){window.location.hash=hash;}
-else{handleRoute();}
+function showModal(id){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));document.getElementById(id)?.classList.add('show');}
+function hideModal(id){document.getElementById(id)?.classList.remove('show');}
+function navigate(page){
+if(page==='myprofile'&&currentUser){
+window.location.hash='user/'+currentUser.id;
+}else{
+window.location.hash=page;
 }
-function handleRoute(){
+}
+function hideAllPages(){
+['listingsPage','messagesPage','notificationsPage','profilePage','viewListingPage','viewProfilePage'].forEach(id=>{
+const el=document.getElementById(id);
+if(el)el.style.display='none';
+});
+}
+function setActiveNav(page){
+document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
+if(page==='listings')document.querySelector('[data-nav="listings"]')?.classList.add('active');
+else if(page==='messages')document.querySelector('[data-nav="messages"]')?.classList.add('active');
+else if(page==='notifications')document.querySelector('[data-nav="notifications"]')?.classList.add('active');
+else if(page==='user'||page==='myprofile')document.querySelector('[data-nav="myprofile"]')?.classList.add('active');
+}
+async function handleRoute(){
 const hash=window.location.hash.slice(1)||'listings';
 const parts=hash.split('/');
 const page=parts[0];
 const param=parts[1]||null;
-document.querySelectorAll('.nav-link').forEach(l=>{l.classList.remove('active');if(l.dataset.page===page)l.classList.add('active');});
-['listingsPage','messagesPage','notificationsPage','profilePage','viewListingPage','viewProfilePage'].forEach(p=>{document.getElementById(p).style.display='none';});
-if(page==='listings'){document.getElementById('listingsPage').style.display='block';loadListings();}
-else if(page==='messages'){if(!currentUser){showModal('loginModal');navigate('listings');return;}document.getElementById('messagesPage').style.display='block';loadChats();if(param)openChat(param);}
-else if(page==='notifications'){if(!currentUser){showModal('loginModal');navigate('listings');return;}document.getElementById('notificationsPage').style.display='block';loadNotifications();}
-else if(page==='profile'){if(!currentUser){showModal('loginModal');navigate('listings');return;}document.getElementById('profilePage').style.display='block';loadMyProfile();}
-else if(page==='listing'&&param){viewListing(param);}
-else if(page==='user'&&param){viewProfile(param);}
-else{document.getElementById('listingsPage').style.display='block';loadListings();}
-window.scrollTo(0,0);
+hideAllPages();
+setActiveNav(page);
+if(page==='listings'){
+document.getElementById('listingsPage').style.display='block';
+await loadListings();
+}else if(page==='messages'){
+if(!currentUser){showModal('loginModal');navigate('listings');return;}
+document.getElementById('messagesPage').style.display='block';
+await loadChats();
+if(param)await openChat(param);
+}else if(page==='notifications'){
+if(!currentUser){showModal('loginModal');navigate('listings');return;}
+document.getElementById('notificationsPage').style.display='block';
+await loadNotifications();
+}else if(page==='user'&&param){
+await viewProfile(param);
+}else if(page==='listing'&&param){
+await viewListing(param);
+}else{
+document.getElementById('listingsPage').style.display='block';
+await loadListings();
 }
-async function getIP(){try{const r=await fetch('https://api.ipify.org?format=json');const d=await r.json();userIP=d.ip||'';}catch(e){userIP='unknown';}}
-async function checkIPLimit(){if(!userIP)return{canRegister:true};try{const{data}=await supabase.from('rustex_ip_limits').select('*').eq('ip_address',userIP);return{canRegister:!data||data.length<3,count:data?data.length:0};}catch(e){return{canRegister:true};}}
-async function registerIP(userId){if(!userIP)return;try{await supabase.from('rustex_ip_limits').insert({ip_address:userIP,user_id:userId});}catch(e){}}
-async function checkUsernameAvailable(username){try{const{data}=await supabase.from('rustex_profiles').select('id').eq('username',username).maybeSingle();return!data;}catch(e){return true;}}
+}
+async function getIP(){
+try{const r=await fetch('https://api.ipify.org?format=json');const d=await r.json();userIP=d.ip||'';}catch(e){userIP='unknown';}
+}
+async function checkIPLimit(){
+if(!userIP)return{canRegister:true};
+try{const{data}=await supabase.from('rustex_ip_limits').select('*').eq('ip_address',userIP);return{canRegister:!data||data.length<3,count:data?data.length:0};}catch(e){return{canRegister:true};}
+}
+async function registerIP(userId){
+if(!userIP)return;
+try{await supabase.from('rustex_ip_limits').insert({ip_address:userIP,user_id:userId});}catch(e){}
+}
+async function checkUsernameAvailable(username){
+try{const{data}=await supabase.from('rustex_profiles').select('id').eq('username',username).maybeSingle();return!data;}catch(e){return true;}
+}
 async function init(){
 await getIP();
 try{
@@ -704,12 +742,12 @@ if(data.session){window.history.replaceState(null,'',window.location.pathname);c
 const{data:{session}}=await supabase.auth.getSession();
 if(session&&session.user){currentUser=session.user;await loadOrCreateProfile();}
 updateUIForAuth();
-handleRoute();
+await handleRoute();
 supabase.auth.onAuthStateChange(async(event,session)=>{
-if(event==='SIGNED_IN'&&session){currentUser=session.user;await loadOrCreateProfile();updateUIForAuth();handleRoute();}
+if(event==='SIGNED_IN'&&session){currentUser=session.user;await loadOrCreateProfile();updateUIForAuth();await handleRoute();}
 else if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null;updateUIForAuth();navigate('listings');}
 });
-}catch(e){console.log(e);}
+}catch(e){console.error(e);}
 finally{document.getElementById('loadingOverlay').style.display='none';document.getElementById('app').style.opacity='1';}
 startIntervals();
 }
@@ -728,10 +766,10 @@ const username=currentUser.user_metadata?.username||currentUser.email?.split('@'
 const isAdmin=currentUser.email===ADMIN_EMAIL;
 const newProfile={user_id:currentUser.id,username,email:currentUser.email||'',game_nick:username,is_admin:isAdmin,is_new:true,notifications_enabled:true,blocked_users:[]};
 const{data:created}=await supabase.from('rustex_profiles').insert(newProfile).select().single();
-if(created){currentProfile=created;setTimeout(()=>showModal('welcomeModal'),500);return created;}
+if(created){currentProfile=created;blockedUsers=[];setTimeout(()=>showModal('welcomeModal'),500);return created;}
 currentProfile={...newProfile,created_at:new Date().toISOString()};
 return currentProfile;
-}catch(e){currentProfile={username:currentUser.email?.split('@')[0]||'User',game_nick:'',created_at:new Date().toISOString()};return currentProfile;}
+}catch(e){console.error(e);currentProfile={username:currentUser.email?.split('@')[0]||'User',game_nick:'',created_at:new Date().toISOString()};return currentProfile;}
 }
 function updateUIForAuth(){
 const authBtns=document.getElementById('authButtons');
@@ -746,7 +784,20 @@ document.getElementById('headerAvatar').src=getAvatarUrl(currentProfile);
 checkUnreadMessages();checkUnreadNotifications();
 }else{authBtns.style.display='block';userMenu.style.display='none';createBtn.style.display='none';msgNav.style.display='none';notifNav.style.display='none';profNav.style.display='none';}
 }
-async function register(e){
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+e.preventDefault();
+const btn=document.getElementById('loginBtn');const errBox=document.getElementById('loginError');
+btn.disabled=true;btn.textContent='Вход...';errBox.style.display='none';
+const email=document.getElementById('loginEmail').value.trim();
+const password=document.getElementById('loginPassword').value;
+try{
+const{data,error}=await supabase.auth.signInWithPassword({email,password});
+if(error)throw error;
+if(data.user){currentUser=data.user;await loadOrCreateProfile();updateUIForAuth();hideModal('loginModal');showToast('С возвращением!','success');await handleRoute();}
+}catch(err){let msg=err.message||'Ошибка входа';if(msg.includes('Invalid login'))msg='Неверный email или пароль';errBox.textContent=msg;errBox.style.display='block';}
+finally{btn.disabled=false;btn.textContent='Войти';}
+});
+document.getElementById('registerForm').addEventListener('submit',async e=>{
 e.preventDefault();
 const btn=document.getElementById('regBtn');const errBox=document.getElementById('registerError');
 btn.disabled=true;btn.textContent='Регистрация...';errBox.style.display='none';
@@ -761,36 +812,38 @@ if(!available){errBox.textContent='Это имя уже занято';errBox.sty
 try{
 const{data,error}=await supabase.auth.signUp({email,password,options:{data:{username}}});
 if(error)throw error;
-if(data.user){await registerIP(data.user.id);if(data.session){currentUser=data.user;await loadOrCreateProfile();updateUIForAuth();hideModal('registerModal');showToast('Добро пожаловать!','success');handleRoute();}else{const{data:loginData,error:loginErr}=await supabase.auth.signInWithPassword({email,password});if(loginErr)throw loginErr;currentUser=loginData.user;await loadOrCreateProfile();updateUIForAuth();hideModal('registerModal');showToast('Добро пожаловать!','success');handleRoute();}}
+if(data.user){await registerIP(data.user.id);if(data.session){currentUser=data.user;await loadOrCreateProfile();updateUIForAuth();hideModal('registerModal');showToast('Добро пожаловать!','success');await handleRoute();}else{const{data:loginData,error:loginErr}=await supabase.auth.signInWithPassword({email,password});if(loginErr)throw loginErr;currentUser=loginData.user;await loadOrCreateProfile();updateUIForAuth();hideModal('registerModal');showToast('Добро пожаловать!','success');await handleRoute();}}
 }catch(err){let msg=err.message||'Ошибка регистрации';if(msg.includes('already registered'))msg='Email уже зарегистрирован';errBox.textContent=msg;errBox.style.display='block';}
 finally{btn.disabled=false;btn.textContent='Создать аккаунт';}
-}
-async function login(e){
-e.preventDefault();
-const btn=document.getElementById('loginBtn');const errBox=document.getElementById('loginError');
-btn.disabled=true;btn.textContent='Вход...';errBox.style.display='none';
-const email=document.getElementById('loginEmail').value.trim();
-const password=document.getElementById('loginPassword').value;
-try{
-const{data,error}=await supabase.auth.signInWithPassword({email,password});
-if(error)throw error;
-if(data.user){currentUser=data.user;await loadOrCreateProfile();updateUIForAuth();hideModal('loginModal');showToast('С возвращением!','success');handleRoute();}
-}catch(err){let msg=err.message||'Ошибка входа';if(msg.includes('Invalid login'))msg='Неверный email или пароль';errBox.textContent=msg;errBox.style.display='block';}
-finally{btn.disabled=false;btn.textContent='Войти';}
-}
-async function logout(){await supabase.auth.signOut();currentUser=null;currentProfile=null;updateUIForAuth();navigate('listings');showToast('Вы вышли','success');}
-function setFilter(type,value){
-currentFilters[type]=value;
-document.querySelectorAll(`[data-filter="${type}"]`).forEach(el=>{el.classList.remove('active');if(el.dataset.value===value)el.classList.add('active');});
-updateActiveFiltersDisplay();loadListings();
-}
+});
+document.getElementById('logoutBtn').addEventListener('click',async()=>{
+await supabase.auth.signOut();currentUser=null;currentProfile=null;updateUIForAuth();navigate('listings');showToast('Вы вышли','success');
+});
+document.getElementById('filterBtn').addEventListener('click',e=>{
+e.stopPropagation();
+document.getElementById('filterDropdown').classList.toggle('show');
+});
+document.addEventListener('click',e=>{
+if(!e.target.closest('.dropdown'))document.querySelectorAll('.dropdown-menu').forEach(d=>d.classList.remove('show'));
+});
+document.getElementById('filterDropdown').addEventListener('click',e=>{
+const item=e.target.closest('.dropdown-item');
+if(!item)return;
+const filter=item.dataset.filter;
+const value=item.dataset.value;
+currentFilters[filter]=value;
+document.querySelectorAll(`[data-filter="${filter}"]`).forEach(el=>{el.classList.remove('active');if(el.dataset.value===value)el.classList.add('active');});
+updateActiveFiltersDisplay();
+loadListings();
+});
 function updateActiveFiltersDisplay(){
 const container=document.getElementById('activeFilters');
 let html='';
-if(currentFilters.category!=='all')html+=`<span class="px-3 py-1 bg-orange-600/20 text-orange-400 rounded text-sm">${categoryLabels[currentFilters.category]||currentFilters.category} <span class="cursor-pointer ml-1" data-clear-filter="category">×</span></span>`;
-if(currentFilters.server!=='all')html+=`<span class="px-3 py-1 bg-blue-600/20 text-blue-400 rounded text-sm">Сервер #${currentFilters.server} <span class="cursor-pointer ml-1" data-clear-filter="server">×</span></span>`;
+if(currentFilters.category!=='all')html+=`<span class="px-3 py-1 bg-orange-600/20 text-orange-400 rounded text-sm cursor-pointer" onclick="clearFilter('category')">${categoryLabels[currentFilters.category]||currentFilters.category} ×</span>`;
+if(currentFilters.server!=='all')html+=`<span class="px-3 py-1 bg-blue-600/20 text-blue-400 rounded text-sm cursor-pointer" onclick="clearFilter('server')">Сервер #${currentFilters.server} ×</span>`;
 container.innerHTML=html;
 }
+window.clearFilter=function(type){currentFilters[type]='all';document.querySelectorAll(`[data-filter="${type}"]`).forEach(el=>{el.classList.remove('active');if(el.dataset.value==='all')el.classList.add('active');});updateActiveFiltersDisplay();loadListings();}
 async function loadListings(){
 const grid=document.getElementById('listingsGrid');const empty=document.getElementById('listingsEmpty');const loading=document.getElementById('listingsLoading');
 loading.style.display='block';grid.innerHTML='';empty.style.display='none';
@@ -815,9 +868,9 @@ const profile=profileMap[l.user_id]||{username:'Игрок',avatar_url:''};
 const imgUrl=l.image_url||DEFAULT_IMAGE;
 const isLiked=userLikes.includes(l.id);
 const theme=l.theme||'orange';
-return`<div class="rust-card listing-card theme-${theme} ${l.is_frozen?'frozen':''}" data-view-listing="${l.id}"><div class="h-40 bg-cover bg-center relative" style="background-image:url('${imgUrl}')"><div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div><div class="absolute top-3 right-3"><span class="server-badge">#${l.server||'1'}</span></div><div class="absolute bottom-3 left-3 right-3 flex justify-between items-end"><span class="category-badge">${categoryLabels[l.category]||l.category}</span>${l.is_frozen?'<span class="category-badge" style="background:#1d4ed8">Заморожено</span>':''}</div></div><div class="p-4"><h3 class="font-bold text-lg mb-1 truncate text-white">${escapeHtml(l.title||'')}</h3><div class="date-badge mb-2"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/></svg>${formatDate(l.created_at)}</div><p class="text-gray-400 text-sm mb-3 line-clamp-2">${escapeHtml((l.description||'').substring(0,80))}${(l.description||'').length>80?'...':''}</p><div class="flex items-center justify-between"><div class="flex items-center gap-2 cursor-pointer" data-view-profile="${l.user_id}"><img src="${getAvatarUrl(profile,64)}" class="w-8 h-8 rounded-full border-2 border-zinc-600"><span class="text-sm text-gray-300">${escapeHtml(profile.username||'Игрок')}</span>${profile.is_admin?'<span class="admin-badge text-xs py-0.5 px-2">ADM</span>':''}</div><div class="like-btn ${isLiked?'liked':''}" data-like="${l.id}"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg><span>${l.likes_count||0}</span></div></div></div></div>`;
+return`<div class="rust-card listing-card theme-${theme} ${l.is_frozen?'frozen':''}" onclick="navigate('listing/${l.id}')"><div class="h-40 bg-cover bg-center relative" style="background-image:url('${imgUrl}')"><div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div><div class="absolute top-3 right-3"><span class="server-badge">#${l.server||'1'}</span></div><div class="absolute bottom-3 left-3 right-3 flex justify-between items-end"><span class="category-badge">${categoryLabels[l.category]||l.category}</span>${l.is_frozen?'<span class="category-badge" style="background:#1d4ed8">Заморожено</span>':''}</div></div><div class="p-4"><h3 class="font-bold text-lg mb-1 truncate text-white">${escapeHtml(l.title||'')}</h3><div class="date-badge mb-2"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/></svg>${formatDate(l.created_at)}</div><p class="text-gray-400 text-sm mb-3 line-clamp-2">${escapeHtml((l.description||'').substring(0,80))}${(l.description||'').length>80?'...':''}</p><div class="flex items-center justify-between"><div class="flex items-center gap-2 cursor-pointer" onclick="event.stopPropagation();navigate('user/${l.user_id}')"><img src="${getAvatarUrl(profile,64)}" class="w-8 h-8 rounded-full border-2 border-zinc-600"><span class="text-sm text-gray-300">${escapeHtml(profile.username||'Игрок')}</span>${profile.is_admin?'<span class="admin-badge text-xs py-0.5 px-2">ADM</span>':''}</div><div class="like-btn ${isLiked?'liked':''}" onclick="event.stopPropagation();toggleLike('${l.id}')"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg><span>${l.likes_count||0}</span></div></div></div></div>`;
 }).join('');
-}catch(err){loading.style.display='none';empty.style.display='block';}
+}catch(err){console.error(err);loading.style.display='none';empty.style.display='block';}
 }
 async function toggleLike(listingId){
 if(!currentUser){showModal('loginModal');return;}
@@ -826,15 +879,21 @@ const{data:listing}=await supabase.from('rustex_listings').select('user_id,likes
 if(!listing)return;
 if(listing.user_id===currentUser.id){showToast('Нельзя лайкать своё объявление','error');return;}
 const{data:existing}=await supabase.from('rustex_likes').select('id').eq('user_id',currentUser.id).eq('listing_id',listingId).maybeSingle();
-const newCount=existing?Math.max(0,(listing.likes_count||1)-1):(listing.likes_count||0)+1;
-if(existing){await supabase.from('rustex_likes').delete().eq('id',existing.id);}
-else{
+let newCount;
+if(existing){
+await supabase.from('rustex_likes').delete().eq('id',existing.id);
+newCount=Math.max(0,(listing.likes_count||1)-1);
+}else{
 await supabase.from('rustex_likes').insert({user_id:currentUser.id,listing_id:listingId});
-if(notificationsEnabled){const{data:existingNotif}=await supabase.from('rustex_notifications').select('id').eq('user_id',listing.user_id).eq('type','like').eq('link',listingId).maybeSingle();if(!existingNotif){await supabase.from('rustex_notifications').insert({user_id:listing.user_id,type:'like',title:'Новый лайк',message:`${currentProfile?.username||'Кто-то'} оценил ваше объявление`,link:listingId});}}
+newCount=(listing.likes_count||0)+1;
+if(notificationsEnabled){
+const{data:existingNotif}=await supabase.from('rustex_notifications').select('id').eq('user_id',listing.user_id).eq('type','like').eq('link',listingId).maybeSingle();
+if(!existingNotif){await supabase.from('rustex_notifications').insert({user_id:listing.user_id,type:'like',title:'Новый лайк',message:`${currentProfile?.username||'Кто-то'} оценил ваше объявление`,link:listingId});}
+}
 }
 await supabase.from('rustex_listings').update({likes_count:newCount}).eq('id',listingId);
-loadListings();
-}catch(e){console.log(e);}
+await loadListings();
+}catch(e){console.error(e);}
 }
 async function viewListing(id){
 if(!currentUser){showToast('Войдите для просмотра','error');showModal('loginModal');return;}
@@ -848,84 +907,89 @@ const{data:existing}=await supabase.from('rustex_likes').select('id').eq('user_i
 const isLiked=!!existing;
 const isOwner=currentUser.id===l.user_id;
 const isAdmin=currentProfile?.is_admin;
+hideAllPages();
 document.getElementById('viewListingPage').style.display='block';
-['listingsPage','messagesPage','notificationsPage','profilePage','viewProfilePage'].forEach(p=>{document.getElementById(p).style.display='none';});
 const imgUrl=l.image_url||DEFAULT_IMAGE;
 const theme=l.theme||'orange';
 document.getElementById('listingDetail').className=`rust-card theme-${theme}`;
-document.getElementById('listingDetail').innerHTML=`${l.is_frozen?`<div class="frozen-banner m-4"><b>Объявление заморожено</b><br><span class="text-sm opacity-80">${escapeHtml(l.frozen_reason||'Нарушение правил')}</span></div>`:''}<div class="md:flex"><div class="md:w-1/2 h-64 md:h-auto bg-cover bg-center relative" style="background-image:url('${imgUrl}');min-height:280px"><div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div><div class="absolute top-4 right-4"><span class="server-badge text-sm">#${l.server||'1'}</span></div></div><div class="md:w-1/2 p-6"><span class="category-badge inline-block mb-3">${categoryLabels[l.category]||l.category}</span><h1 class="rust-font text-2xl mb-2 glow-text" style="color:var(--theme-color,var(--rust-orange))">${escapeHtml(l.title||'')}</h1><div class="date-badge mb-4"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/></svg>${formatDate(l.created_at)}</div><p class="text-gray-300 mb-6 whitespace-pre-wrap text-sm">${escapeHtml(l.description||'')}</p><div class="bg-zinc-800/50 rounded p-4 mb-6"><div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg><span class="text-gray-400">Ник:</span><span class="text-white">${escapeHtml(l.game_nick||'-')}</span></div></div><div class="flex items-center gap-4 p-3 bg-zinc-800/30 rounded mb-6 cursor-pointer hover:bg-zinc-800/50" data-view-profile="${l.user_id}"><img src="${getAvatarUrl(profile)}" class="w-12 h-12 rounded-full border-2 border-zinc-600"><div class="flex-1"><div class="font-bold text-white flex items-center gap-2">${escapeHtml(profile.username||'Игрок')}${profile.is_admin?'<span class="admin-badge text-xs py-0.5 px-2">ADM</span>':''}</div><div class="text-xs text-gray-400">${escapeHtml(profile.game_nick||'-')}</div></div></div><div class="flex flex-wrap gap-3 mb-4">${renderSocialBtn(l.telegram,'tg')}${renderSocialBtn(l.vk,'vk')}<div class="like-btn ${isLiked?'liked':''}" data-like="${l.id}"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg><span>${l.likes_count||0}</span></div>${!isOwner?`<button class="rust-btn flex-1" data-start-chat="${l.user_id}">Написать</button>`:''}</div>${isOwner?`<div class="flex gap-2"><button class="rust-btn rust-btn-secondary flex-1" data-edit-listing="${l.id}">Редактировать</button><button class="rust-btn flex-1" style="background:linear-gradient(180deg,#dc2626,#991b1b,#7f1d1d)" data-delete-listing="${l.id}">Удалить</button></div>`:''} ${isAdmin&&!isOwner?`<button class="rust-btn w-full mt-2" data-admin-listing="${l.id}">Админ-панель</button>`:''}</div></div>`;
-}catch(err){console.log(err);showToast('Ошибка загрузки','error');}
+document.getElementById('listingDetail').innerHTML=`${l.is_frozen?`<div class="frozen-banner m-4"><b>Объявление заморожено</b><br><span class="text-sm opacity-80">${escapeHtml(l.frozen_reason||'Нарушение правил')}</span></div>`:''}<div class="md:flex"><div class="md:w-1/2 h-64 md:h-auto bg-cover bg-center relative" style="background-image:url('${imgUrl}');min-height:280px"><div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div><div class="absolute top-4 right-4"><span class="server-badge text-sm">#${l.server||'1'}</span></div></div><div class="md:w-1/2 p-6"><span class="category-badge inline-block mb-3">${categoryLabels[l.category]||l.category}</span><h1 class="rust-font text-2xl mb-2 glow-text" style="color:var(--theme-color,var(--rust-orange))">${escapeHtml(l.title||'')}</h1><div class="date-badge mb-4"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/></svg>${formatDate(l.created_at)}</div><p class="text-gray-300 mb-6 whitespace-pre-wrap text-sm">${escapeHtml(l.description||'')}</p><div class="bg-zinc-800/50 rounded p-4 mb-6"><div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg><span class="text-gray-400">Ник:</span><span class="text-white">${escapeHtml(l.game_nick||'-')}</span></div></div><div class="flex items-center gap-4 p-3 bg-zinc-800/30 rounded mb-6 cursor-pointer hover:bg-zinc-800/50" onclick="navigate('user/${l.user_id}')"><img src="${getAvatarUrl(profile)}" class="w-12 h-12 rounded-full border-2 border-zinc-600"><div class="flex-1"><div class="font-bold text-white flex items-center gap-2">${escapeHtml(profile.username||'Игрок')}${profile.is_admin?'<span class="admin-badge text-xs py-0.5 px-2">ADM</span>':''}</div><div class="text-xs text-gray-400">${escapeHtml(profile.game_nick||'-')}</div></div></div><div class="flex flex-wrap gap-3 mb-4">${renderSocialBtn(l.telegram,'tg')}${renderSocialBtn(l.vk,'vk')}<div class="like-btn ${isLiked?'liked':''}" onclick="toggleLike('${l.id}')"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg><span>${l.likes_count||0}</span></div>${!isOwner?`<button class="rust-btn flex-1" onclick="startChatWith('${l.user_id}')">Написать</button>`:''}</div>${isOwner?`<div class="flex gap-2"><button class="rust-btn rust-btn-secondary flex-1" onclick="editMyListing('${l.id}')">Редактировать</button><button class="rust-btn flex-1" style="background:linear-gradient(180deg,#dc2626,#991b1b,#7f1d1d)" onclick="deleteListing('${l.id}')">Удалить</button></div>`:''} ${isAdmin&&!isOwner?`<button class="rust-btn w-full mt-2" onclick="openAdminModal('${l.id}')">Админ-панель</button>`:''}</div></div>`;
+}catch(err){console.error(err);showToast('Ошибка загрузки','error');}
 }
 function renderSocialBtn(value,type){
 if(!value||value==='-')return'';
 let url='';
-if(type==='tg'){if(value.startsWith('http'))url=value;else if(value.startsWith('@'))url='https://t.me/'+value.slice(1);else url='https://t.me/'+value;return`<a href="${url}" target="_blank" class="social-btn tg-btn"><svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>`;}
-if(type==='vk'){if(value.startsWith('http'))url=value;else if(value.startsWith('@'))url='https://vk.com/'+value.slice(1);else url='https://vk.com/'+value;return`<a href="${url}" target="_blank" class="social-btn vk-btn"><svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.864-.525-2.05-1.727-1.033-1-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.118-5.335-3.202C4.624 10.857 4 8.57 4 8.096c0-.254.102-.491.593-.491h1.744c.44 0 .61.203.78.678.863 2.49 2.303 4.675 2.896 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.203.17-.407.44-.407h2.743c.373 0 .508.203.508.643v3.473c0 .372.17.508.271.508.22 0 .407-.136.814-.542 1.27-1.422 2.18-3.61 2.18-3.61.119-.254.322-.491.763-.491h1.744c.525 0 .644.27.525.643-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.49-.085.744-.576.744z"/></svg></a>`;}
+if(type==='tg'){if(value.startsWith('http'))url=value;else if(value.startsWith('@'))url='https://t.me/'+value.slice(1);else url='https://t.me/'+value;return`<a href="${url}" target="_blank" class="social-btn tg-btn" onclick="event.stopPropagation()"><svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>`;}
+if(type==='vk'){if(value.startsWith('http'))url=value;else if(value.startsWith('@'))url='https://vk.com/'+value.slice(1);else url='https://vk.com/'+value;return`<a href="${url}" target="_blank" class="social-btn vk-btn" onclick="event.stopPropagation()"><svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.864-.525-2.05-1.727-1.033-1-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.118-5.335-3.202C4.624 10.857 4 8.57 4 8.096c0-.254.102-.491.593-.491h1.744c.44 0 .61.203.78.678.863 2.49 2.303 4.675 2.896 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.203.17-.407.44-.407h2.743c.373 0 .508.203.508.643v3.473c0 .372.17.508.271.508.22 0 .407-.136.814-.542 1.27-1.422 2.18-3.61 2.18-3.61.119-.254.322-.491.763-.491h1.744c.525 0 .644.27.525.643-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.49-.085.744-.576.744z"/></svg></a>`;}
 return'';
 }
 async function viewProfile(userId){
 viewingUserId=userId;
+const isOwn=currentUser&&currentUser.id===userId;
 try{
-let p={username:'Игрок',avatar_url:'',game_nick:'-',description:'',telegram:'-',vk:'-',is_admin:false};
+let p={username:'Игрок',avatar_url:'',game_nick:'-',description:'',telegram:'-',vk:'-',is_admin:false,created_at:new Date().toISOString()};
 try{const{data}=await supabase.from('rustex_profiles').select('*').eq('user_id',userId).maybeSingle();if(data)p=data;}catch(e){}
+hideAllPages();
+if(isOwn){
+document.getElementById('profilePage').style.display='block';
+document.getElementById('profileAvatar').src=getAvatarUrl(p,256);
+document.getElementById('profileUsername').textContent=p.username||'Пользователь';
+document.getElementById('profileNick').textContent=p.game_nick||'-';
+document.getElementById('profileDesc').textContent=p.description||'Заполните описание профиля.';
+document.getElementById('profileJoined').textContent=p.created_at?new Date(p.created_at).toLocaleDateString('ru'):'—';
+document.getElementById('adminBadge').style.display=p.is_admin?'inline':'none';
+document.getElementById('adminPanel').style.display=p.is_admin?'block':'none';
+let socials='';socials+=renderSocialBtn(p.telegram,'tg');socials+=renderSocialBtn(p.vk,'vk');
+document.getElementById('profileSocials').innerHTML=socials;
+document.getElementById('editGameNick').value=p.game_nick||'';
+document.getElementById('editTelegram').value=p.telegram||'';
+document.getElementById('editVk').value=p.vk||'';
+document.getElementById('editDescription').value=p.description||'';
+if(p.is_admin){try{const{count:usersCount}=await supabase.from('rustex_profiles').select('*',{count:'exact',head:true});const{count:listingsCount}=await supabase.from('rustex_listings').select('*',{count:'exact',head:true});document.getElementById('adminUsersCount').textContent=usersCount||0;document.getElementById('adminListingsCount').textContent=listingsCount||0;}catch(e){}}
+let myListings=[];try{const{data}=await supabase.from('rustex_listings').select('*').eq('user_id',userId).order('created_at',{ascending:false});if(data)myListings=data;}catch(e){}
+document.getElementById('myListingsGrid').innerHTML=myListings.length?myListings.map(l=>renderMyListingCard(l)).join(''):'<div class="col-span-3 text-center py-12"><p class="text-gray-500">У вас нет объявлений</p><button class="rust-btn mt-4" onclick="createListing()">Создать первое</button></div>';
+}else{
 document.getElementById('viewProfilePage').style.display='block';
-['listingsPage','messagesPage','notificationsPage','profilePage','viewListingPage'].forEach(pg=>{document.getElementById(pg).style.display='none';});
 document.getElementById('viewProfileAvatar').src=getAvatarUrl(p,256);
 document.getElementById('viewProfileUsername').textContent=p.username||'Игрок';
 document.getElementById('viewProfileNick').textContent=p.game_nick||'-';
 document.getElementById('viewProfileDesc').textContent=p.description||'Описание не заполнено.';
 document.getElementById('viewAdminBadge').style.display=p.is_admin?'inline':'none';
-document.getElementById('viewProfileChatBtn').style.display=(currentUser&&currentUser.id===userId)?'none':'inline-flex';
 let socials='';socials+=renderSocialBtn(p.telegram,'tg');socials+=renderSocialBtn(p.vk,'vk');
 document.getElementById('viewProfileSocials').innerHTML=socials;
+document.getElementById('viewProfileActions').innerHTML=currentUser?`<button class="rust-btn" onclick="startChatWith('${userId}')">Написать</button>`:'';
 let listings=[];try{const{data}=await supabase.from('rustex_listings').select('*').eq('user_id',userId).order('created_at',{ascending:false});if(data)listings=data;}catch(e){}
 document.getElementById('userListingsGrid').innerHTML=listings.length?listings.map(l=>renderListingCard(l,p)).join(''):'<p class="text-gray-500 col-span-3 text-center py-10">Нет объявлений</p>';
-}catch(err){console.log(err);}
+}
+}catch(err){console.error(err);}
 }
 function renderListingCard(l,profile){
 const imgUrl=l.image_url||DEFAULT_IMAGE;const theme=l.theme||'orange';
-return`<div class="rust-card listing-card theme-${theme}" data-view-listing="${l.id}"><div class="h-32 bg-cover bg-center relative" style="background-image:url('${imgUrl}')"><div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div><div class="absolute top-2 right-2"><span class="server-badge">#${l.server||'1'}</span></div></div><div class="p-4"><span class="category-badge text-xs">${categoryLabels[l.category]||l.category}</span><h3 class="font-bold mt-2 text-white">${escapeHtml(l.title||'')}</h3><div class="date-badge mt-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/></svg>${formatDate(l.created_at)}</div><div class="like-btn mt-2 inline-flex" data-like="${l.id}"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg><span>${l.likes_count||0}</span></div></div></div>`;
+return`<div class="rust-card listing-card theme-${theme}" onclick="navigate('listing/${l.id}')"><div class="h-32 bg-cover bg-center relative" style="background-image:url('${imgUrl}')"><div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div><div class="absolute top-2 right-2"><span class="server-badge">#${l.server||'1'}</span></div></div><div class="p-4"><span class="category-badge text-xs">${categoryLabels[l.category]||l.category}</span><h3 class="font-bold mt-2 text-white">${escapeHtml(l.title||'')}</h3><div class="date-badge mt-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/></svg>${formatDate(l.created_at)}</div><div class="like-btn mt-2 inline-flex" onclick="event.stopPropagation();toggleLike('${l.id}')"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg><span>${l.likes_count||0}</span></div></div></div>`;
 }
-async function loadMyProfile(){
-if(!currentProfile)await loadOrCreateProfile();
-if(!currentProfile)return;
-document.getElementById('profileAvatar').src=getAvatarUrl(currentProfile,256);
-document.getElementById('profileUsername').textContent=currentProfile.username||'Пользователь';
-document.getElementById('profileNick').textContent=currentProfile.game_nick||'-';
-document.getElementById('profileDesc').textContent=currentProfile.description||'Заполните описание профиля.';
-document.getElementById('profileJoined').textContent=currentProfile.created_at?new Date(currentProfile.created_at).toLocaleDateString('ru'):'—';
-document.getElementById('adminBadge').style.display=currentProfile.is_admin?'inline':'none';
-document.getElementById('adminPanel').style.display=currentProfile.is_admin?'block':'none';
-let socials='';socials+=renderSocialBtn(currentProfile.telegram,'tg');socials+=renderSocialBtn(currentProfile.vk,'vk');
-document.getElementById('profileSocials').innerHTML=socials;
-document.getElementById('editGameNick').value=currentProfile.game_nick||'';
-document.getElementById('editTelegram').value=currentProfile.telegram||'';
-document.getElementById('editVk').value=currentProfile.vk||'';
-document.getElementById('editDescription').value=currentProfile.description||'';
-if(currentProfile.is_admin){try{const{count:usersCount}=await supabase.from('rustex_profiles').select('*',{count:'exact',head:true});const{count:listingsCount}=await supabase.from('rustex_listings').select('*',{count:'exact',head:true});document.getElementById('adminUsersCount').textContent=usersCount||0;document.getElementById('adminListingsCount').textContent=listingsCount||0;}catch(e){}}
-let myListings=[];try{const{data}=await supabase.from('rustex_listings').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});if(data)myListings=data;}catch(e){}
-document.getElementById('myListingsGrid').innerHTML=myListings.length?myListings.map(l=>`<div class="rust-card listing-card theme-${l.theme||'orange'}"><div class="h-32 bg-cover bg-center relative" style="background-image:url('${l.image_url||DEFAULT_IMAGE}')"><div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div><div class="absolute top-2 right-2"><span class="server-badge">#${l.server||'1'}</span></div></div><div class="p-4"><span class="category-badge text-xs">${categoryLabels[l.category]||l.category}</span><h3 class="font-bold mt-2 text-white">${escapeHtml(l.title||'')}</h3><div class="flex justify-between items-center mt-3"><div class="like-btn inline-flex text-sm"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg><span>${l.likes_count||0}</span></div><div class="flex gap-2"><button class="text-blue-400 hover:text-blue-300 text-xs" data-edit-listing="${l.id}">Изменить</button><button class="text-red-400 hover:text-red-300 text-xs" data-delete-listing="${l.id}">Удалить</button></div></div></div></div>`).join(''):'<div class="col-span-3 text-center py-12"><p class="text-gray-500">У вас нет объявлений</p><button class="rust-btn mt-4" id="createFirstBtn">Создать первое</button></div>';
+function renderMyListingCard(l){
+const imgUrl=l.image_url||DEFAULT_IMAGE;const theme=l.theme||'orange';
+return`<div class="rust-card listing-card theme-${theme}"><div class="h-32 bg-cover bg-center relative" style="background-image:url('${imgUrl}')"><div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div><div class="absolute top-2 right-2"><span class="server-badge">#${l.server||'1'}</span></div></div><div class="p-4"><span class="category-badge text-xs">${categoryLabels[l.category]||l.category}</span><h3 class="font-bold mt-2 text-white">${escapeHtml(l.title||'')}</h3><div class="flex justify-between items-center mt-3"><div class="like-btn inline-flex text-sm"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg><span>${l.likes_count||0}</span></div><div class="flex gap-2"><button class="text-blue-400 hover:text-blue-300 text-xs" onclick="editMyListing('${l.id}')">Изменить</button><button class="text-red-400 hover:text-red-300 text-xs" onclick="deleteListing('${l.id}')">Удалить</button></div></div></div></div>`;
 }
-async function updateProfile(e){
+document.getElementById('editProfileForm').addEventListener('submit',async e=>{
 e.preventDefault();
 const updates={game_nick:document.getElementById('editGameNick').value.trim()||'-',telegram:document.getElementById('editTelegram').value.trim()||'-',vk:document.getElementById('editVk').value.trim()||'-',description:document.getElementById('editDescription').value.trim()||''};
-try{await supabase.from('rustex_profiles').update(updates).eq('user_id',currentUser.id);currentProfile={...currentProfile,...updates};hideModal('editProfileModal');loadMyProfile();updateUIForAuth();showToast('Сохранено!','success');}catch(err){showToast('Ошибка сохранения','error');}
-}
-async function uploadAvatar(e){
+try{await supabase.from('rustex_profiles').update(updates).eq('user_id',currentUser.id);currentProfile={...currentProfile,...updates};hideModal('editProfileModal');await viewProfile(currentUser.id);updateUIForAuth();showToast('Сохранено!','success');}catch(err){showToast('Ошибка сохранения','error');}
+});
+document.getElementById('avatarInput').addEventListener('change',async e=>{
 const file=e.target.files[0];if(!file)return;
 if(file.size>500000){showToast('Макс. размер 500KB','error');return;}
 const reader=new FileReader();
-reader.onload=async(ev)=>{try{const avatarUrl=ev.target.result;await supabase.from('rustex_profiles').update({avatar_url:avatarUrl}).eq('user_id',currentUser.id);currentProfile.avatar_url=avatarUrl;loadMyProfile();updateUIForAuth();showToast('Аватар обновлён!','success');}catch(err){showToast('Ошибка загрузки','error');}};
+reader.onload=async(ev)=>{try{const avatarUrl=ev.target.result;await supabase.from('rustex_profiles').update({avatar_url:avatarUrl}).eq('user_id',currentUser.id);currentProfile.avatar_url=avatarUrl;await viewProfile(currentUser.id);updateUIForAuth();showToast('Аватар обновлён!','success');}catch(err){showToast('Ошибка загрузки','error');}};
 reader.readAsDataURL(file);
-}
-function previewListingImage(e){
+});
+document.getElementById('listingImageInput')?.addEventListener('change',e=>{
 const file=e.target.files[0];if(!file)return;
 if(file.size>1000000){showToast('Макс. размер 1MB','error');return;}
 const reader=new FileReader();
-reader.onload=(ev)=>{document.getElementById('listingImage').value=ev.target.result;const upload=document.getElementById('listingImageUpload');upload.innerHTML=`<img src="${ev.target.result}" class="max-h-32 rounded"><span class="text-green-400 text-xs mt-2">Выбрано</span><input type="file" accept="image/*" id="listingImageInput">`;};
+reader.onload=(ev)=>{document.getElementById('listingImage').value=ev.target.result;document.getElementById('listingImageUpload').innerHTML=`<img src="${ev.target.result}" class="max-h-32 rounded"><span class="text-green-400 text-xs mt-2">Выбрано</span><input type="file" accept="image/*" id="listingImageInput">`;};
 reader.readAsDataURL(file);
-}
-async function createListing(){
+});
+window.createListing=async function(){
 if(!currentUser){showModal('loginModal');return;}
 let myListings=[];try{const{data}=await supabase.from('rustex_listings').select('id').eq('user_id',currentUser.id);if(data)myListings=data;}catch(e){}
 if(myListings.length>=3){showToast('Макс. 3 объявления','error');return;}
@@ -936,56 +1000,80 @@ document.getElementById('listingImage').value='';
 document.getElementById('listingImageUpload').innerHTML=`<svg class="w-10 h-10 text-gray-500 mb-2" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg><span class="text-gray-400 text-sm">Нажми или перетащи</span><input type="file" accept="image/*" id="listingImageInput">`;
 showModal('createListingModal');
 }
-async function submitListing(e){
+document.getElementById('createListingForm').addEventListener('submit',async e=>{
 e.preventDefault();
 const btn=document.getElementById('submitListingBtn');btn.disabled=true;btn.textContent='Публикация...';
 const title=document.getElementById('listingTitle').value.trim();
 const desc=document.getElementById('listingDesc').value.trim();
 if(containsBannedWords(title)||containsBannedWords(desc)){showToast('Обнаружен запрещённый контент','error');btn.disabled=false;btn.textContent='Опубликовать';return;}
 const listing={user_id:currentUser.id,category:document.getElementById('listingCategory').value,server:document.getElementById('listingServer').value,theme:document.getElementById('listingTheme').value,title,description:desc,image_url:document.getElementById('listingImage').value||'',telegram:document.getElementById('listingTelegram').value.trim()||'-',vk:document.getElementById('listingVk').value.trim()||'-',game_nick:document.getElementById('listingNick').value.trim()};
-try{await supabase.from('rustex_listings').insert(listing);hideModal('createListingModal');document.getElementById('createListingForm').reset();loadListings();showToast('Опубликовано!','success');}catch(err){showToast('Ошибка публикации','error');}
+try{await supabase.from('rustex_listings').insert(listing);hideModal('createListingModal');document.getElementById('createListingForm').reset();await loadListings();showToast('Опубликовано!','success');}catch(err){showToast('Ошибка публикации','error');}
 finally{btn.disabled=false;btn.textContent='Опубликовать';}
+});
+window.editMyListing=async function(id){
+try{const{data:l}=await supabase.from('rustex_listings').select('*').eq('id',id).single();if(!l)return;document.getElementById('editListingId').value=id;document.getElementById('editListingCategory').value=l.category;document.getElementById('editListingServer').value=l.server||'1';document.getElementById('editListingTheme').value=l.theme||'orange';document.getElementById('editListingTitle').value=l.title;document.getElementById('editListingDesc').value=l.description;document.getElementById('editListingTelegram').value=l.telegram;document.getElementById('editListingVk').value=l.vk;document.getElementById('editListingNick').value=l.game_nick;showModal('editListingModal');}catch(e){showToast('Ошибка','error');}
 }
-async function editMyListing(id){try{const{data:l}=await supabase.from('rustex_listings').select('*').eq('id',id).single();if(!l)return;document.getElementById('editListingId').value=id;document.getElementById('editListingCategory').value=l.category;document.getElementById('editListingServer').value=l.server||'1';document.getElementById('editListingTheme').value=l.theme||'orange';document.getElementById('editListingTitle').value=l.title;document.getElementById('editListingDesc').value=l.description;document.getElementById('editListingTelegram').value=l.telegram;document.getElementById('editListingVk').value=l.vk;document.getElementById('editListingNick').value=l.game_nick;showModal('editListingModal');}catch(e){showToast('Ошибка','error');}}
-async function updateListing(e){
+document.getElementById('editListingForm').addEventListener('submit',async e=>{
 e.preventDefault();
 const id=document.getElementById('editListingId').value;
 const title=document.getElementById('editListingTitle').value.trim();
 const desc=document.getElementById('editListingDesc').value.trim();
 if(containsBannedWords(title)||containsBannedWords(desc)){showToast('Запрещённый контент','error');return;}
 const updates={category:document.getElementById('editListingCategory').value,server:document.getElementById('editListingServer').value,theme:document.getElementById('editListingTheme').value,title,description:desc,telegram:document.getElementById('editListingTelegram').value.trim()||'-',vk:document.getElementById('editListingVk').value.trim()||'-',game_nick:document.getElementById('editListingNick').value.trim()};
-try{await supabase.from('rustex_listings').update(updates).eq('id',id);hideModal('editListingModal');showToast('Сохранено!','success');loadListings();if(currentListingId===id)viewListing(id);}catch(e){showToast('Ошибка','error');}
+try{await supabase.from('rustex_listings').update(updates).eq('id',id);hideModal('editListingModal');showToast('Сохранено!','success');await loadListings();if(currentListingId===id)await viewListing(id);}catch(e){showToast('Ошибка','error');}
+});
+window.deleteListing=async function(id){
+if(!confirm('Удалить объявление?'))return;
+try{await supabase.from('rustex_listings').delete().eq('id',id);showToast('Удалено','success');navigate('listings');}catch(err){showToast('Ошибка','error');}
 }
-async function deleteListing(id){if(!confirm('Удалить объявление?'))return;try{await supabase.from('rustex_listings').delete().eq('id',id);showToast('Удалено','success');navigate('listings');}catch(err){showToast('Ошибка','error');}}
-async function adminFreezeListing(){const id=document.getElementById('adminListingId').value;const reason=document.getElementById('adminFreezeReason').value.trim()||'Нарушение правил';try{const{data:l}=await supabase.from('rustex_listings').select('user_id').eq('id',id).single();await supabase.from('rustex_listings').update({is_frozen:true,frozen_reason:reason}).eq('id',id);await supabase.from('rustex_notifications').insert({user_id:l.user_id,type:'freeze',title:'Объявление заморожено',message:reason,link:id});hideModal('adminListingModal');showToast('Заморожено','success');viewListing(id);}catch(e){showToast('Ошибка','error');}}
-async function adminUnfreezeListing(){const id=document.getElementById('adminListingId').value;try{await supabase.from('rustex_listings').update({is_frozen:false,frozen_reason:''}).eq('id',id);hideModal('adminListingModal');showToast('Разморожено','success');viewListing(id);}catch(e){showToast('Ошибка','error');}}
-async function adminEditListing(){const id=document.getElementById('adminListingId').value;hideModal('adminListingModal');editMyListing(id);}
-async function adminDeleteListing(){const id=document.getElementById('adminListingId').value;if(!confirm('Удалить объявление?'))return;try{const{data:l}=await supabase.from('rustex_listings').select('user_id').eq('id',id).single();await supabase.from('rustex_listings').delete().eq('id',id);await supabase.from('rustex_notifications').insert({user_id:l.user_id,type:'delete',title:'Объявление удалено',message:'Администратор удалил ваше объявление'});hideModal('adminListingModal');showToast('Удалено','success');navigate('listings');}catch(e){showToast('Ошибка','error');}}
-async function adminDeleteUser(){const input=document.getElementById('adminDeleteUserInput').value.trim();if(!input){showToast('Введите ник или email','error');return;}if(!confirm('Удалить пользователя '+input+'?'))return;try{const{data:p}=await supabase.from('rustex_profiles').select('user_id').or(`username.eq.${input},email.eq.${input}`).maybeSingle();if(!p){showToast('Пользователь не найден','error');return;}await supabase.from('rustex_listings').delete().eq('user_id',p.user_id);await supabase.from('rustex_profiles').delete().eq('user_id',p.user_id);showToast('Пользователь удалён','success');document.getElementById('adminDeleteUserInput').value='';loadMyProfile();}catch(e){showToast('Ошибка','error');}}
+window.openAdminModal=function(id){document.getElementById('adminListingId').value=id;showModal('adminListingModal');}
+document.getElementById('adminFreezeBtn').addEventListener('click',async()=>{
+const id=document.getElementById('adminListingId').value;const reason=document.getElementById('adminFreezeReason').value.trim()||'Нарушение правил';
+try{const{data:l}=await supabase.from('rustex_listings').select('user_id').eq('id',id).single();await supabase.from('rustex_listings').update({is_frozen:true,frozen_reason:reason}).eq('id',id);await supabase.from('rustex_notifications').insert({user_id:l.user_id,type:'freeze',title:'Объявление заморожено',message:reason,link:id});hideModal('adminListingModal');showToast('Заморожено','success');await viewListing(id);}catch(e){showToast('Ошибка','error');}
+});
+document.getElementById('adminUnfreezeBtn').addEventListener('click',async()=>{
+const id=document.getElementById('adminListingId').value;
+try{await supabase.from('rustex_listings').update({is_frozen:false,frozen_reason:''}).eq('id',id);hideModal('adminListingModal');showToast('Разморожено','success');await viewListing(id);}catch(e){showToast('Ошибка','error');}
+});
+document.getElementById('adminEditBtn').addEventListener('click',()=>{const id=document.getElementById('adminListingId').value;hideModal('adminListingModal');editMyListing(id);});
+document.getElementById('adminDeleteBtn').addEventListener('click',async()=>{
+const id=document.getElementById('adminListingId').value;
+if(!confirm('Удалить объявление?'))return;
+try{const{data:l}=await supabase.from('rustex_listings').select('user_id').eq('id',id).single();await supabase.from('rustex_listings').delete().eq('id',id);await supabase.from('rustex_notifications').insert({user_id:l.user_id,type:'delete',title:'Объявление удалено',message:'Администратор удалил ваше объявление'});hideModal('adminListingModal');showToast('Удалено','success');navigate('listings');}catch(e){showToast('Ошибка','error');}
+});
+document.getElementById('adminDeleteUserBtn').addEventListener('click',async()=>{
+const input=document.getElementById('adminDeleteUserInput').value.trim();
+if(!input){showToast('Введите ник или email','error');return;}
+if(!confirm('Удалить пользователя '+input+'?'))return;
+try{const{data:p}=await supabase.from('rustex_profiles').select('user_id').or(`username.eq.${input},email.eq.${input}`).maybeSingle();if(!p){showToast('Пользователь не найден','error');return;}await supabase.from('rustex_listings').delete().eq('user_id',p.user_id);await supabase.from('rustex_profiles').delete().eq('user_id',p.user_id);showToast('Пользователь удалён','success');document.getElementById('adminDeleteUserInput').value='';await viewProfile(currentUser.id);}catch(e){showToast('Ошибка','error');}
+});
 async function loadChats(){
 let userIds=new Set();
 try{const{data:sent}=await supabase.from('rustex_messages').select('receiver_id').eq('sender_id',currentUser.id);const{data:received}=await supabase.from('rustex_messages').select('sender_id').eq('receiver_id',currentUser.id);(sent||[]).forEach(m=>userIds.add(m.receiver_id));(received||[]).forEach(m=>userIds.add(m.sender_id));}catch(e){}
 if(userIds.size===0){document.getElementById('chatsList').innerHTML='<div class="text-center py-8 text-gray-500 text-sm">Нет диалогов</div>';return;}
 let profiles=[];let unreadMap={};
 try{const{data}=await supabase.from('rustex_profiles').select('*').in('user_id',Array.from(userIds));if(data)profiles=data;const{data:unread}=await supabase.from('rustex_messages').select('sender_id').eq('receiver_id',currentUser.id).eq('is_read',false);(unread||[]).forEach(m=>{unreadMap[m.sender_id]=(unreadMap[m.sender_id]||0)+1;});}catch(e){}
-document.getElementById('chatsList').innerHTML=profiles.map(p=>`<div class="flex items-center gap-3 p-3 rounded cursor-pointer transition-all ${currentChatUserId===p.user_id?'bg-orange-600/20':'hover:bg-zinc-800/50'}" data-open-chat="${p.user_id}"><img src="${getAvatarUrl(p)}" class="w-10 h-10 rounded-full border-2 border-zinc-600"><div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${escapeHtml(p.username||'Игрок')}</div><div class="text-xs text-gray-400 truncate">${escapeHtml(p.game_nick||'-')}</div></div>${unreadMap[p.user_id]?`<span class="unread-badge">${unreadMap[p.user_id]}</span>`:''}</div>`).join('');
+document.getElementById('chatsList').innerHTML=profiles.map(p=>`<div class="flex items-center gap-3 p-3 rounded cursor-pointer transition-all ${currentChatUserId===p.user_id?'bg-orange-600/20':'hover:bg-zinc-800/50'}" onclick="openChat('${p.user_id}')"><img src="${getAvatarUrl(p)}" class="w-10 h-10 rounded-full border-2 border-zinc-600"><div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${escapeHtml(p.username||'Игрок')}</div><div class="text-xs text-gray-400 truncate">${escapeHtml(p.game_nick||'-')}</div></div>${unreadMap[p.user_id]?`<span class="unread-badge">${unreadMap[p.user_id]}</span>`:''}</div>`).join('');
 }
-async function openChat(userId){
+window.openChat=async function(userId){
 currentChatUserId=userId;
-loadChats();
-let p={username:'Игрок',avatar_url:'',game_nick:'-'};
+await loadChats();
+let p={username:'Игрок',avatar_url:'',game_nick:'-',blocked_users:[]};
 try{const{data}=await supabase.from('rustex_profiles').select('*').eq('user_id',userId).maybeSingle();if(data)p=data;}catch(e){}
-const isBlocked=blockedUsers.includes(userId);
+const iBlockedThem=blockedUsers.includes(userId);
+const theyBlockedMe=(p.blocked_users||[]).includes(currentUser.id);
 document.getElementById('chatHeader').style.display='flex';
 document.getElementById('chatEmpty').style.display='none';
 document.getElementById('chatAvatar').src=getAvatarUrl(p);
 document.getElementById('chatName').textContent=p.username||'Игрок';
 document.getElementById('chatNick').textContent=p.game_nick||'-';
-document.getElementById('blockUserBtn').textContent=isBlocked?'Разблокировать':'Заблокировать';
-if(isBlocked){document.getElementById('chatInput').style.display='none';document.getElementById('chatBlocked').style.display='block';}
-else{document.getElementById('chatInput').style.display='block';document.getElementById('chatBlocked').style.display='none';}
+document.getElementById('blockUserBtn').textContent=iBlockedThem?'Разблокировать':'Заблокировать';
+document.getElementById('chatBlocked').style.display=iBlockedThem?'block':'none';
+document.getElementById('chatBlockedByUser').style.display=theyBlockedMe&&!iBlockedThem?'block':'none';
+document.getElementById('chatInput').style.display=iBlockedThem||theyBlockedMe?'none':'block';
 try{await supabase.from('rustex_messages').update({is_read:true}).eq('sender_id',userId).eq('receiver_id',currentUser.id);}catch(e){}
-loadMessages();checkUnreadMessages();
+await loadMessages();
+checkUnreadMessages();
 }
 async function loadMessages(){
 if(!currentChatUserId)return;
@@ -995,26 +1083,34 @@ const container=document.getElementById('chatMessages');
 container.innerHTML=messages.map(m=>`<div class="chat-message ${m.sender_id===currentUser.id?'sent':'received'}"><div class="text-sm">${escapeHtml(m.content||'')}</div><div class="text-xs opacity-60 mt-1">${new Date(m.created_at).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}</div></div>`).join('');
 container.scrollTop=container.scrollHeight;
 }
+document.getElementById('sendMessageBtn').addEventListener('click',sendMessage);
+document.getElementById('messageInput').addEventListener('keypress',e=>{if(e.key==='Enter')sendMessage();});
 async function sendMessage(){
 const input=document.getElementById('messageInput');
 const content=input.value.trim();
 if(!content||!currentChatUserId)return;
-if(blockedUsers.includes(currentChatUserId)){showToast('Пользователь заблокирован','error');return;}
+if(blockedUsers.includes(currentChatUserId)){showToast('Вы заблокировали этого пользователя','error');return;}
+let receiverProfile=null;
+try{const{data}=await supabase.from('rustex_profiles').select('blocked_users').eq('user_id',currentChatUserId).maybeSingle();if(data)receiverProfile=data;}catch(e){}
+if(receiverProfile&&(receiverProfile.blocked_users||[]).includes(currentUser.id)){showToast('Этот пользователь заблокировал вас','error');return;}
 if(containsBannedWords(content)){showToast('Запрещённый контент','error');return;}
-try{await supabase.from('rustex_messages').insert({sender_id:currentUser.id,receiver_id:currentChatUserId,content});input.value='';loadMessages();}catch(err){showToast('Ошибка','error');}
+try{await supabase.from('rustex_messages').insert({sender_id:currentUser.id,receiver_id:currentChatUserId,content});input.value='';await loadMessages();}catch(err){showToast('Ошибка','error');}
 }
-async function startChatWith(userId){
+window.startChatWith=async function(userId){
 if(!currentUser){showModal('loginModal');return;}
 if(userId===currentUser.id){showToast('Нельзя написать себе','error');return;}
-navigate('messages',userId);
+navigate('messages/'+userId);
 }
-async function toggleBlockUser(){
+document.getElementById('blockUserBtn').addEventListener('click',async()=>{
 if(!currentChatUserId)return;
-const isBlocked=blockedUsers.includes(currentChatUserId);
-if(isBlocked){blockedUsers=blockedUsers.filter(id=>id!==currentChatUserId);}else{blockedUsers.push(currentChatUserId);}
-try{await supabase.from('rustex_profiles').update({blocked_users:blockedUsers}).eq('user_id',currentUser.id);currentProfile.blocked_users=blockedUsers;openChat(currentChatUserId);showToast(isBlocked?'Разблокирован':'Заблокирован','success');}catch(e){showToast('Ошибка','error');}
+const iBlockedThem=blockedUsers.includes(currentChatUserId);
+if(iBlockedThem){blockedUsers=blockedUsers.filter(id=>id!==currentChatUserId);}else{blockedUsers.push(currentChatUserId);}
+try{await supabase.from('rustex_profiles').update({blocked_users:blockedUsers}).eq('user_id',currentUser.id);currentProfile.blocked_users=blockedUsers;await openChat(currentChatUserId);showToast(iBlockedThem?'Разблокирован':'Заблокирован','success');}catch(e){showToast('Ошибка','error');}
+});
+async function checkUnreadMessages(){
+if(!currentUser)return;
+try{const{data}=await supabase.from('rustex_messages').select('id').eq('receiver_id',currentUser.id).eq('is_read',false);const badge=document.getElementById('unreadBadge');if(data&&data.length>0){badge.style.display='flex';badge.textContent=data.length;}else{badge.style.display='none';}}catch(e){}
 }
-async function checkUnreadMessages(){if(!currentUser)return;try{const{data}=await supabase.from('rustex_messages').select('id').eq('receiver_id',currentUser.id).eq('is_read',false);const badge=document.getElementById('unreadBadge');if(data&&data.length>0){badge.style.display='flex';badge.textContent=data.length;}else{badge.style.display='none';}}catch(e){}}
 async function loadNotifications(){
 document.getElementById('notifStatus').textContent=notificationsEnabled?'Уведомления включены':'Уведомления отключены';
 document.getElementById('toggleNotifBtn').textContent=notificationsEnabled?'Отключить':'Включить';
@@ -1022,69 +1118,27 @@ try{
 const{data}=await supabase.from('rustex_notifications').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(50);
 if(!data||data.length===0){document.getElementById('notificationsList').innerHTML='';document.getElementById('notificationsEmpty').style.display='block';return;}
 document.getElementById('notificationsEmpty').style.display='none';
-document.getElementById('notificationsList').innerHTML=data.map(n=>`<div class="rust-card p-4 flex items-start gap-4 ${n.is_read?'opacity-60':''}"><div class="w-10 h-10 rounded-full flex items-center justify-center ${n.type==='like'?'bg-red-600/20 text-red-400':n.type==='freeze'?'bg-blue-600/20 text-blue-400':'bg-gray-600/20 text-gray-400'}">${n.type==='like'?'<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg>':n.type==='freeze'?'<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M5 8a1 1 0 011-1h1V6a1 1 0 012 0v1h2V6a1 1 0 112 0v1h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H6a1 1 0 110-2h1v-2H6a1 1 0 01-1-1z"/></svg>':'<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/></svg>'}</div><div class="flex-1"><div class="font-bold text-sm">${escapeHtml(n.title)}</div><div class="text-gray-400 text-xs mt-1">${escapeHtml(n.message)}</div><div class="text-gray-500 text-xs mt-2">${new Date(n.created_at).toLocaleString('ru')}</div></div>${n.link&&n.type==='like'?`<button class="rust-btn rust-btn-sm rust-btn-secondary" data-view-listing="${n.link}">Открыть</button>`:''}</div>`).join('');
+document.getElementById('notificationsList').innerHTML=data.map(n=>`<div class="rust-card p-4 flex items-start gap-4 ${n.is_read?'opacity-60':''}"><div class="w-10 h-10 rounded-full flex items-center justify-center ${n.type==='like'?'bg-red-600/20 text-red-400':n.type==='freeze'?'bg-blue-600/20 text-blue-400':'bg-gray-600/20 text-gray-400'}">${n.type==='like'?'<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg>':n.type==='freeze'?'<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M5 8a1 1 0 011-1h1V6a1 1 0 012 0v1h2V6a1 1 0 112 0v1h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H6a1 1 0 110-2h1v-2H6a1 1 0 01-1-1z"/></svg>':'<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/></svg>'}</div><div class="flex-1"><div class="font-bold text-sm">${escapeHtml(n.title)}</div><div class="text-gray-400 text-xs mt-1">${escapeHtml(n.message)}</div><div class="text-gray-500 text-xs mt-2">${new Date(n.created_at).toLocaleString('ru')}</div></div>${n.link&&n.type==='like'?`<button class="rust-btn rust-btn-sm rust-btn-secondary" onclick="navigate('listing/${n.link}')">Открыть</button>`:''}</div>`).join('');
 }catch(e){}
 }
-async function toggleNotifications(){notificationsEnabled=!notificationsEnabled;try{await supabase.from('rustex_profiles').update({notifications_enabled:notificationsEnabled}).eq('user_id',currentUser.id);currentProfile.notifications_enabled=notificationsEnabled;loadNotifications();showToast(notificationsEnabled?'Уведомления включены':'Уведомления отключены','success');}catch(e){showToast('Ошибка','error');}}
-async function checkUnreadNotifications(){if(!currentUser)return;try{const{data}=await supabase.from('rustex_notifications').select('id').eq('user_id',currentUser.id).eq('is_read',false);const dot=document.getElementById('notificationDot');if(data&&data.length>0){dot.style.display='block';}else{dot.style.display='none';}}catch(e){}}
-async function markAllNotificationsRead(){try{await supabase.from('rustex_notifications').update({is_read:true}).eq('user_id',currentUser.id);loadNotifications();checkUnreadNotifications();showToast('Все прочитано','success');}catch(e){}}
-document.addEventListener('click',function(e){
-const target=e.target.closest('[data-nav]');
-if(target){e.preventDefault();navigate(target.dataset.nav);return;}
-const modalBtn=e.target.closest('[data-modal]');
-if(modalBtn){e.preventDefault();showModal(modalBtn.dataset.modal);return;}
-const closeBtn=e.target.closest('[data-close]');
-if(closeBtn){e.preventDefault();hideAllModals();return;}
-const switchBtn=e.target.closest('[data-switch]');
-if(switchBtn){e.preventDefault();hideAllModals();setTimeout(()=>showModal(switchBtn.dataset.switch),100);return;}
-const dropdownBtn=e.target.closest('[data-dropdown]');
-if(dropdownBtn){e.preventDefault();const menu=document.getElementById(dropdownBtn.dataset.dropdown);document.querySelectorAll('.dropdown-menu').forEach(d=>{if(d!==menu)d.classList.remove('show');});menu.classList.toggle('show');return;}
-if(!e.target.closest('.dropdown')){document.querySelectorAll('.dropdown-menu').forEach(d=>d.classList.remove('show'));}
-const filterBtn=e.target.closest('[data-filter]');
-if(filterBtn){e.preventDefault();setFilter(filterBtn.dataset.filter,filterBtn.dataset.value);return;}
-const clearFilter=e.target.closest('[data-clear-filter]');
-if(clearFilter){e.preventDefault();setFilter(clearFilter.dataset.clearFilter,'all');return;}
-const viewListing=e.target.closest('[data-view-listing]');
-if(viewListing){e.preventDefault();e.stopPropagation();navigate('listing',viewListing.dataset.viewListing);return;}
-const viewProfile=e.target.closest('[data-view-profile]');
-if(viewProfile){e.preventDefault();e.stopPropagation();navigate('user',viewProfile.dataset.viewProfile);return;}
-const likeBtn=e.target.closest('[data-like]');
-if(likeBtn){e.preventDefault();e.stopPropagation();toggleLike(likeBtn.dataset.like);return;}
-const startChat=e.target.closest('[data-start-chat]');
-if(startChat){e.preventDefault();startChatWith(startChat.dataset.startChat);return;}
-const editListing=e.target.closest('[data-edit-listing]');
-if(editListing){e.preventDefault();e.stopPropagation();editMyListing(editListing.dataset.editListing);return;}
-const deleteListing2=e.target.closest('[data-delete-listing]');
-if(deleteListing2){e.preventDefault();e.stopPropagation();deleteListing(deleteListing2.dataset.deleteListing);return;}
-const adminListing=e.target.closest('[data-admin-listing]');
-if(adminListing){e.preventDefault();document.getElementById('adminListingId').value=adminListing.dataset.adminListing;showModal('adminListingModal');return;}
-const openChat2=e.target.closest('[data-open-chat]');
-if(openChat2){e.preventDefault();openChat(openChat2.dataset.openChat);return;}
-const modalBg=e.target.closest('.modal');
-if(modalBg&&e.target===modalBg){hideAllModals();return;}
+document.getElementById('toggleNotifBtn').addEventListener('click',async()=>{
+notificationsEnabled=!notificationsEnabled;
+try{await supabase.from('rustex_profiles').update({notifications_enabled:notificationsEnabled}).eq('user_id',currentUser.id);currentProfile.notifications_enabled=notificationsEnabled;await loadNotifications();showToast(notificationsEnabled?'Уведомления включены':'Уведомления отключены','success');}catch(e){showToast('Ошибка','error');}
 });
-document.getElementById('loginForm').addEventListener('submit',login);
-document.getElementById('registerForm').addEventListener('submit',register);
-document.getElementById('editProfileForm').addEventListener('submit',updateProfile);
-document.getElementById('createListingForm').addEventListener('submit',submitListing);
-document.getElementById('editListingForm').addEventListener('submit',updateListing);
-document.getElementById('createListingBtn').addEventListener('click',createListing);
-document.getElementById('logoutBtn').addEventListener('click',logout);
-document.getElementById('welcomeBtn').addEventListener('click',()=>{hideModal('welcomeModal');navigate('profile');});
-document.getElementById('avatarInput').addEventListener('change',uploadAvatar);
-document.getElementById('blockUserBtn').addEventListener('click',toggleBlockUser);
-document.getElementById('sendMessageBtn').addEventListener('click',sendMessage);
-document.getElementById('messageInput').addEventListener('keypress',e=>{if(e.key==='Enter')sendMessage();});
-document.getElementById('toggleNotifBtn').addEventListener('click',toggleNotifications);
-document.getElementById('markAllReadBtn').addEventListener('click',markAllNotificationsRead);
-document.getElementById('adminFreezeBtn').addEventListener('click',adminFreezeListing);
-document.getElementById('adminUnfreezeBtn').addEventListener('click',adminUnfreezeListing);
-document.getElementById('adminEditBtn').addEventListener('click',adminEditListing);
-document.getElementById('adminDeleteBtn').addEventListener('click',adminDeleteListing);
-document.getElementById('adminDeleteUserBtn').addEventListener('click',adminDeleteUser);
-document.getElementById('viewProfileChatBtn').addEventListener('click',()=>{if(viewingUserId)startChatWith(viewingUserId);});
-document.addEventListener('click',e=>{if(e.target.id==='createFirstBtn')createListing();});
-document.getElementById('listingImageUpload').addEventListener('change',e=>{if(e.target.id==='listingImageInput')previewListingImage(e);});
+async function checkUnreadNotifications(){
+if(!currentUser)return;
+try{const{data}=await supabase.from('rustex_notifications').select('id').eq('user_id',currentUser.id).eq('is_read',false);const dot=document.getElementById('notificationDot');if(data&&data.length>0){dot.style.display='block';}else{dot.style.display='none';}}catch(e){}
+}
+document.getElementById('markAllReadBtn').addEventListener('click',async()=>{
+try{await supabase.from('rustex_notifications').update({is_read:true}).eq('user_id',currentUser.id);await loadNotifications();checkUnreadNotifications();showToast('Все прочитано','success');}catch(e){}
+});
+document.querySelectorAll('[data-nav]').forEach(el=>{
+el.addEventListener('click',e=>{
+e.preventDefault();
+const nav=el.dataset.nav;
+navigate(nav);
+});
+});
 window.addEventListener('hashchange',handleRoute);
 init();
 </script>
