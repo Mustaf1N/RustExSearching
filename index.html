@@ -1003,6 +1003,8 @@ await supabase.from('rustex_listings').update({likes_count:Math.max(0,(listing.l
 await supabase.from('rustex_likes').insert({user_id:currentUser.id,listing_id:listingId});
 await supabase.from('rustex_listings').update({likes_count:(listing.likes_count||0)+1}).eq('id',listingId);
 if(notificationsEnabled){
+const{data:existingNotif}=await supabase.from('rustex_notifications').select('id').eq('user_id',listing.user_id).eq('type','like').eq('link',listingId).maybeSingle();
+if(!existingNotif){
 await supabase.from('rustex_notifications').insert({
 user_id:listing.user_id,
 type:'like',
@@ -1010,6 +1012,7 @@ title:'Новый лайк',
 message:`${currentProfile?.username||'Кто-то'} оценил ваше объявление`,
 link:listingId
 });
+}
 }
 }
 loadListings();
